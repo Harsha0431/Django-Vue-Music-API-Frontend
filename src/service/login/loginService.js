@@ -19,6 +19,21 @@ export async function LoginService(data){
     }
 }
 
+export async function SignupService(data){
+    try{
+        return await axios.post(`${URI}/api/user/signup/` , data)
+            .then((res)=>{
+                return res.data
+            })
+            .catch(()=>{
+                return {code:-1 , message:'Network error'}
+            })
+    }
+    catch(e){
+        return {code:-1 , message:'Network error'};
+    }
+}
+
 
 export async function VerifyToken(token){
     try{
