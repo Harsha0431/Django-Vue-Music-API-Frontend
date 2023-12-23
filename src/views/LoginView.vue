@@ -5,10 +5,12 @@ import { loaderStore } from "@/store/LoaderStore";
 import VueCookies from 'vue-cookies';
 import { userStore } from "@/store/User";
 import router from "@/router";
+import { ToastStore } from "@/store/ToastStore";
 
 
 const loadStoreObj = loaderStore()
 const userStoreObj = userStore()
+const toastStore = ToastStore()
 
 const loginWithUsername = ref(false)
 
@@ -17,7 +19,6 @@ const password = ref('');
 const email = ref('');
 
 const handleLoginSubmit = async() =>{
-    //TODO: Complete Login for wrong credentials and username login
     loadStoreObj.toggleLoader();
     const login_data = loginWithUsername.value ? {username:username.value,password:password.value} : {email:email.value,password:password.value}
     await LoginService(login_data)
@@ -25,9 +26,15 @@ const handleLoginSubmit = async() =>{
             if(res.code == 1){
                 VueCookies.set('user-token' , res.token , '7d')
                 userStoreObj.setUser({username: res.user.username , userMail: res.user.email , token: res.token , isLoggedIn:true , userRole:res.user.role})
+                toastStore.message = "Logged in successfully"
+                toastStore.type = 'success'
+                toastStore.showToast = true
             }
-            else{
-                alert(res.message)
+            else
+            {
+                toastStore.message = res.message
+                toastStore.type = res.code==0?'alert' :'error'
+                toastStore.showToast = true
             }
         })
         .finally(()=>loadStoreObj.toggleLoader())

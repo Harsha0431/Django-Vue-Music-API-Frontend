@@ -9,6 +9,7 @@
   import VueCookies from 'vue-cookies';
   import { VerifyToken } from './service/login/loginService';
   import { userStore } from './store/User';
+  import ToastsView from './components/Toasts/ToastsView.vue';
 
   const themeStoreObj = themeStore() ;
   const loaderStoreObj = loaderStore();
@@ -42,6 +43,7 @@
 
 <template>
   <div :class="themeStoreObj.isDarkTheme?'dark':'w-full'" class="body-container">
+    <ToastsView />
     <div class="loader-box fixed inset-0 bg-gray-800 opacity-50 top-0 z-[100]" v-show="loaderStoreObj.showLoader">
       <div v-show="loaderStoreObj.showLoader" class="fixed inset-0 bg-gray-800 opacity-50"></div>
       <MusicLoaderVue />
