@@ -17,6 +17,9 @@ dependencies:
   pinia:
     specifier: ^2.1.7
     version: 2.1.7(vue@3.3.11)
+  spotify-web-playback:
+    specifier: ^1.4.0
+    version: 1.4.0
   vue:
     specifier: ^3.3.10
     version: 3.3.11
@@ -2338,6 +2341,10 @@ packages:
   /source-map-js@1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
     engines: {node: '>=0.10.0'}
+
+  /spotify-web-playback@1.4.0:
+    resolution: {integrity: sha512-hZsYJ4xgkz7eUe9QVM+7wqT1hhFTRrW5q2VDVRK46gfIuIka6wsN/DQnL7Nf8OvvcFdRf0ksjP64ARN/wPljtA==}
+    dev: false
 
   /strip-ansi@6.0.1:
     resolution: {integrity: sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==}

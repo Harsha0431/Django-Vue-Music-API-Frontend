@@ -26,7 +26,7 @@ const handleLogout = () =>{
 </script>
 
 <template>
-    <Disclosure as="nav" class="w-full sticky z-50 navbar bg-white border-b-2 shadow-sm dark:bg-gray-700" v-slot="{ open }">
+    <Disclosure as="nav" class="w-full sticky z-50 navbar bg-white border-b-2 dark:border-b-0 shadow-sm dark:bg-gray-800" v-slot="{ open }">
         <div class="mx-auto sm:max-w-7xl px-2 sm:px-6 lg:px-8">
             <div class="relative flex h-16 items-center justify-between">
                 <div class="nav-logo max-sm:hidden">

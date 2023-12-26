@@ -11,6 +11,10 @@
   import { userStore } from './store/User';
   import ToastsView from './components/Toasts/ToastsView.vue';
 
+  import WebPlayback from './components/MusicPlayer/WebPlayback.vue';
+  import { useSpotifyStore } from '@/store/SpotifyStore';
+
+  const spotifyStore = useSpotifyStore()
   const themeStoreObj = themeStore() ;
   const loaderStoreObj = loaderStore();
   const userStoreObj = userStore();
@@ -40,20 +44,23 @@
         verify_user_token()
   })
 </script>
-
+//TODO:Add this snippet in body-container class {{themeStoreObj.isDarkTheme&& 'bg-[#1a1b1f]'}} for dark theme
 <template>
-  <div :class="themeStoreObj.isDarkTheme?'dark':'w-full'" class="body-container">
+  <div class="body-container" :class="[ 'body-container' , themeStoreObj.isDarkTheme?'dark':'w-full']">
     <ToastsView />
     <div class="loader-box fixed inset-0 bg-gray-800 opacity-50 top-0 z-[100]" v-show="loaderStoreObj.showLoader">
       <div v-show="loaderStoreObj.showLoader" class="fixed inset-0 bg-gray-800 opacity-50"></div>
       <MusicLoaderVue />
+    </div>
+    <div v-if="spotifyStore.is_active" class="music-player-container absolute bottom-0 right-2">
+      <web-playback />
     </div>
     <nav class="body-nav-container">
       <Navbar />
     </nav>
 
     <main class="body-main-container w-full">
-      <RouterView />
+        <RouterView />
     </main>
 
     <footer class="body-footer-container">
@@ -85,7 +92,6 @@
   .body-main-container{
     grid-area: main;
   }
-
   .body-footer-container{
     grid-area: footer;
   }
