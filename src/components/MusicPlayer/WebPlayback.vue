@@ -11,17 +11,38 @@ onMounted(()=>{
     const element = document.getElementById('embed-iframe');
     const options = {
       width: `${window.innerWidth > 500?'450':'100%'}`,
-      height: `${window.innerWidth > 500?'220':'230'}`,
+      height: `${window.innerWidth > 500?'140':'150'}`,
       uri:`${store.track_list[store.current_track]}`
     };
     const callback = (EmbedController) => {
+      
       EmbedController.addListener('playback_update', e => {
+
+        if(e.data.position>e.data.duration/2)
+        {
+          const recent = store.track_list[store.current_track]
+          store.addToCompletelyListenedList(recent)
+        }
+
         if(e.data.position==e.data.duration && e.data.duration!=0){
           const recent = store.track_list[store.current_track]
+          store.addToCompletelyListenedList(recent)
           store.track_list.shift()
-          store.track_list.push(recent)
+          store.previous_list.unshift(recent)
+          if(store.track_list.length>0){
+            EmbedController.loadUri(store.track_list[store.current_track])
+            EmbedController.play()
+          }
+        }
+
+        if (e.data.position!=0){
+          store.isPlaying = true
+        }
+
+        if (e.data.position!=e.data.duration && store.isInterrupted) {
           EmbedController.loadUri(store.track_list[store.current_track])
           EmbedController.play()
+          store.isInterrupted = false
         }
       });
     };

@@ -32,7 +32,7 @@ const handleLoginSubmit = async() =>{
         .then((res)=>{
             if(res.code == 1){
                 VueCookies.set('user-token' , res.token , '7d')
-                userStoreObj.setUser({username: res.user.username , userMail: res.user.email , token: res.token , isLoggedIn:true , userRole:res.user.role})
+                userStoreObj.setUser({username: res.user.username , userMail: res.user.email , userToken: res.token , isLoggedIn:true , userRole:res.user.role})
                 toastStore.message = "Logged in successfully"
                 toastStore.type = 'success'
                 toastStore.showToast = true

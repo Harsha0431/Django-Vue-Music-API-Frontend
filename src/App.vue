@@ -26,7 +26,7 @@
     await VerifyToken(VueCookies.get('user-token'))
       .then((res)=>{
         if(res.code == 1){
-          userStoreObj.setUser({username: res.user.username , userMail: res.user.email , token: VueCookies.get('user-token') , isLoggedIn:true , userRole:res.user.role})
+          userStoreObj.setUser({username: res.user.username , userMail: res.user.email , userToken: VueCookies.get('user-token') , isLoggedIn:true , userRole:res.user.role})
         }
       })
       .catch((err)=>{
@@ -44,6 +44,8 @@
         verify_user_token()
   })
 </script>
+
+
 //TODO:Add this snippet in body-container class {{themeStoreObj.isDarkTheme&& 'bg-[#1a1b1f]'}} for dark theme
 <template>
   <div class="body-container" :class="[ 'body-container' , themeStoreObj.isDarkTheme?'dark':'w-full']">
@@ -63,7 +65,7 @@
         <RouterView />
     </main>
 
-    <footer class="body-footer-container">
+    <footer class="body-footer-container relative">
       This is footer
     </footer>
 

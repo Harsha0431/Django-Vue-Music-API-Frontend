@@ -12,7 +12,7 @@ watchEffect(()=>{
 </script>
 
 <template>
-    <div class="absolute z-[150] bottom-2 overflow-hidden right-2">
+    <div class="absolute z-[150] bottom-2 overflow-hidden right-2" :class="[toastStore.showToast?'translate-y-0':'-translate-y-full','transition-all']">
         <div v-if="toastStore.showToast" class="max-w-xs bg-gray-50 text-sm text-gray-700 dark:text-white rounded-md shadow-lg dark:bg-gray-900 mb-3 ml-3" role="alert">
             <div class="flex p-4 gap-3 justify-center align-middle">
                 <div class="flex justify-center gap-2">

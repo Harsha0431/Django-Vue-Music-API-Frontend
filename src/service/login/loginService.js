@@ -35,7 +35,7 @@ export async function SignupService(data){
 }
 
 
-export async function VerifyToken(token){
+export async function VerifyToken(token) {
     try{
         return await axios.get(`${URI}/api/user/verify/token/` ,{
             headers:{
