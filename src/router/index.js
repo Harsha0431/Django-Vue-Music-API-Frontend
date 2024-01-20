@@ -22,7 +22,7 @@ const router = createRouter({
             name: 'music',
             component: () => import('../views/MusicView.vue'),
             children: [
-                { path: 'liked', component: () => import('../views/LikedListView.vue'), name:'liked-list' },
+                { path: '', component: () => import('../views/LikedListView.vue'), name:'liked-list' },
                 { path: 'interested', component: () => import('../views/InterestedList.vue'), name:'interested-list' },
                 { path: 'recommended', component: () => import('../views/RecommendedList.vue'), name: 'recommended-list' }
             ]

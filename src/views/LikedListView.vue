@@ -14,6 +14,6 @@ onMounted(async()=>{
 
 <template>
     <div>
-        
+        Liked List
     </div>
 </template>

@@ -2,17 +2,21 @@
 import { computed, onBeforeMount, onMounted, ref } from 'vue';
 import { userStore } from '@/store/User';
 import { createPlaylistService } from '@/service/playlist/createAddService';
-import { RouterView, RouterLink, useRoute, useRouter } from 'vue-router';
+import { RouterView, useRoute, useRouter } from 'vue-router';
+import LikedListView from './LikedListView.vue';
+import RecommendedList from './RecommendedList.vue';
+import InterestedList from './InterestedList.vue';
 
 const router = useRouter()
 const routes = useRoute()
 const currentRouteName = computed(() => {
-    return routes.name || 'music'
+    return routes.name || 'liked-list'
 })
 //Store objects
 const userStoreObj = userStore()
 
 //Local Variables
+const childComponent = ref()
 
 //Functions
 const handleCreatePlaylist = async() =>{
@@ -27,6 +31,17 @@ onBeforeMount(()=>{
     document.title = 'Music' ;
     if(!userStoreObj.isLoggedIn)
         router.push('/login')
+    else{
+        if(currentRouteName.value == 'liked-list'){
+            childComponent.value = LikedListView
+        }
+        else if (currentRouteName.value == 'interested-list')
+            childComponent.value = InterestedList
+        else if (currentRouteName.value == 'recommended-list')
+            childComponent.value = RecommendedList
+        else
+            childComponent.value = LikedListView
+    }
 })
 
 onMounted(async()=>{
@@ -35,15 +50,32 @@ onMounted(async()=>{
 </script>
 
 <template>
-    <div>
-        This is Music page
+    <div class="flex justify-between px-4">
         <div>
+            This is Music page
             Playlist
         </div>
-        <transition name="fade" mode="out-in">
-            <keep-alive>
-                <RouterView v-if="currentRouteName!='music'" />
-            </keep-alive>
-        </transition>
+        <Transition name="slide-fade">
+            <LikedListView v-if="currentRouteName=='liked-list'"/>
+            <RecommendedList v-else-if="routes.name=='recommended-list'"/>
+            <InterestedList v-else-if="routes.name=='interested-list'" />
+            <LikedListView v-else />
+        </Transition>
     </div>
 </template>
+
+<style scoped>
+.slide-fade-enter-active {
+    transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+    transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+    transform: translateX(20px);
+    opacity: 0;
+}
+</style>
