@@ -52,9 +52,16 @@ export const userStore = defineStore('User',()=>{
             const spotifyStore = useSpotifyStore()
             await getInterestedTracksListService(userToken.value).then((res) => {
                 if (res.code == 1) {
-                    const track_set = new Set(spotifyStore.track_list)
-                    track_set.add(...res.data)
+                    let track_set = new Set(spotifyStore.track_list)
+                    if (res.data.length > 4) {
+                        track_set = new Set()
+                    }
+                    res.data.forEach((track) => {
+                        if (!spotifyStore.previous_list.includes(track))
+                            track_set.add(track)
+                    })
                     spotifyStore.track_list = [...track_set]
+                    spotifyStore.interested_list_from_model = res.data
                 }
             })
         }

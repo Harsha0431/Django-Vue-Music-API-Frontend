@@ -5,15 +5,19 @@ import { userStore } from '@/store/User';
 
 import { addToLikedListService, removeFromLikedListService } from '@/service/playlist/addRemoveLikedItem';
 
-import {RouterLink} from 'vue-router';
+import {RouterLink, useRouter} from 'vue-router';
 import { themeStore } from '@/store/ThemeStore';
 import { useSpotifyStore } from '@/store/SpotifyStore';
 import { ToastStore } from '@/store/ToastStore';
 import VueCookies from 'vue-cookies';
+import { ref } from 'vue';
 const themeStoreObj = themeStore();
 const userStoreObj = userStore();
 const spotifyStore = useSpotifyStore();
 const toastStoreObj = ToastStore();
+const isLikeInProgress = ref(false)
+
+const router = useRouter();
 
 const toggleTheme = () =>{
     themeStoreObj.toggleTheme();
@@ -29,10 +33,11 @@ const navigation = [
 const handleLogout = () =>{
     userStoreObj.resetUser()
     VueCookies.remove('user-token')
+    router.push('/login')
 }
 
 const handleTrackChange = (mode) =>{
-    if(!spotifyStore.isPlaying){
+    if(!spotifyStore.isPlaying && mode!='prev'){
         toastStoreObj.message = "Please play music to change track"
         toastStoreObj.type = "alert"
         toastStoreObj.showToast = true
@@ -60,6 +65,7 @@ const handleTrackChange = (mode) =>{
         }
         const recent = spotifyStore.previous_list.shift();
         spotifyStore.track_list.unshift(recent)
+        spotifyStore.current_track = 0
         spotifyStore.isInterrupted = true
     }
 }
@@ -69,12 +75,14 @@ const handleLikeTrackClick = async() =>{
     {
         const index = spotifyStore.liked_list.indexOf(spotifyStore.track_list[spotifyStore.current_track])
         if(index > -1){
+            isLikeInProgress.value = true
             await removeFromLikedListService({"track_id":spotifyStore.track_list[spotifyStore.current_track]} , userStoreObj.userToken)
                 .then((res)=>{
                     if(res.code == 1)
                     {
                         toastStoreObj.message = res.message
                         toastStoreObj.type = 'success'
+                        spotifyStore.interested_list_from_model.splice(index,1)
                         spotifyStore.liked_list.splice(index,1)
                     }
                     else{
@@ -83,9 +91,13 @@ const handleLikeTrackClick = async() =>{
                     }
                     toastStoreObj.showToast = true
                 })
+                .finally(()=>{
+                    isLikeInProgress.value = false
+                })
         }
     }
     else{
+        isLikeInProgress.value = true
         await addToLikedListService({"track_id":spotifyStore.track_list[spotifyStore.current_track]} , userStoreObj.userToken)
             .then((res)=>{
                     if(res.code == 1)
@@ -100,18 +112,22 @@ const handleLikeTrackClick = async() =>{
                     }
                     toastStoreObj.showToast = true
                 })
+                .finally(()=>{
+                    isLikeInProgress.value = false
+                })
     }
 }
 
 </script>
 
 <template>
-    <div class="w-full sticky z-50 ">
-        <Disclosure as="nav" class="navbar dark:bg-gray-800 bg-white border-b-2 dark:border-b-0 shadow-sm " v-slot="{ open }">
+    <div class="w-full sticky z-50 dark:bg-[#18171f]">
+        <!-- Try nav color with #211e2b -->
+        <Disclosure as="nav" class="navbar dark:bg-[#17161f] bg-white border-b-2 dark:border-b-0 shadow-sm dark:shadow-none " v-slot="{ open }">
             <div class="mx-auto sm:max-w-7xl px-2 sm:px-6 lg:px-8">
                 <div class="relative flex h-16 items-center justify-between">
                     <div class="nav-logo max-sm:hidden">
-                        LOGO
+                        <span class="dark:text-gray-300 text-gray-800 font-semibold">MusiBuzz</span>
                     </div>
                     <div class="relative inset-y-0 left-0 flex items-center sm:hidden">
                         <!-- Mobile menu button-->
@@ -169,7 +185,7 @@ const handleLikeTrackClick = async() =>{
                         </button>
                         <Menu as="div" v-if="userStoreObj.isLoggedIn" class="relative inline-block text-left">
                             <MenuButton>
-                                <button class="flex justify-center align-middle rounded-full avatar">
+                                <button class="flex justify-center align-middle rounded-full avatar dark:bg-[#2d2d2d]">
                                     <span class="font-semibold px-[10px] text-lg py-[3px] text-white">{{userStoreObj.isLoggedIn?userStoreObj.username[0].toUpperCase():'G'}}</span>
                                 </button>
                             </MenuButton>
@@ -205,35 +221,37 @@ const handleLikeTrackClick = async() =>{
                 </div>
             </DisclosurePanel>
         </Disclosure>
-        <div v-if="spotifyStore.is_active" class="w-full relative ml-3 mt-2 flex justify-center py-1">
-            <div class="flex gap-4 justify-evenly">
-                <button @click="()=>handleTrackChange('prev')" class="prev-btn stroke-red-400 transition-colors hover:stroke-orange-600 opacity-75 hover:opacity-100">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061A1.125 1.125 0 0 1 21 8.689v8.122ZM11.25 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061a1.125 1.125 0 0 1 1.683.977v8.122Z" />
+        <div v-if="userStoreObj.isLoggedIn" class="w-full relative vsm:ml-3 pb-2 mt-2 flex justify-center">
+            <div class="flex dark:bg-[#2d2d2d] bg-[#efefefc4] relative ssm:ml-6 py-2 px-10 gap-8 rounded-2xl">
+                <div class="flex gap-4 justify-evenly">
+                    <button @click="()=>handleTrackChange('prev')" class="prev-btn stroke-[#ef4b56] transition-colors hover:stroke-[#ef4b56f4] opacity-75 hover:opacity-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061A1.125 1.125 0 0 1 21 8.689v8.122ZM11.25 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061a1.125 1.125 0 0 1 1.683.977v8.122Z" />
+                        </svg>
+                    </button>
+                    <button disabled class="stroke-[#ef4b56] cursor-not-allowed">
+                        <svg v-if="spotifyStore.is_active && spotifyStore.isPlaying" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5" />
+                        </svg>
+                        <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+                        </svg>
+                    </button>
+                    <button @click="()=>handleTrackChange('next')" class="skip-btn stroke-[#ef4b56] transition-colors hover:stroke-[#ef4b56f4] opacity-75 hover:opacity-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061A1.125 1.125 0 0 1 3 16.811V8.69ZM12.75 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061a1.125 1.125 0 0 1-1.683-.977V8.69Z" />
+                        </svg>
+                    </button>
+                </div>
+                <button class="relative active:animate-ping" :class="[isLikeInProgress?'animate-ping':'']" @click="handleLikeTrackClick">
+                    <svg v-if="spotifyStore.liked_list.includes(spotifyStore.track_list[0])" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 like-icon-filled fill-red-600 ">
+                        <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
                     </svg>
-                </button>
-                <button disabled class="stroke-orange-600 cursor-not-allowed">
-                    <svg v-if="spotifyStore.is_active && spotifyStore.isPlaying" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5" />
-                    </svg>
-                    <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
-                    </svg>
-                </button>
-                <button @click="()=>handleTrackChange('next')" class="skip-btn stroke-red-400 transition-colors hover:stroke-orange-600 opacity-75 hover:opacity-100">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061A1.125 1.125 0 0 1 3 16.811V8.69ZM12.75 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061a1.125 1.125 0 0 1-1.683-.977V8.69Z" />
+                    <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6 lik-icon-outline stroke-[#ef4b56f4] hover:animate-pulse hover:stroke-[#ef4b56]">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
                     </svg>
                 </button>
             </div>
-            <button class="relative ml-10 active:animate-ping" @click="handleLikeTrackClick">
-                <svg v-if="spotifyStore.liked_list.includes(spotifyStore.track_list[0])" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 like-icon-filled fill-red-600 ">
-                    <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
-                </svg>
-                <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6 lik-icon-outline stroke-red-400 hover:animate-pulse hover:stroke-red-500">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
-                </svg>
-            </button>
         </div>
     </div>
 </template>
@@ -251,7 +269,8 @@ const handleLikeTrackClick = async() =>{
     .active-nav-icon{
         background: #ff3956;
         border-radius: 8px;
-        color: white !important;
+        color: #fff !important;
+        font-weight: 700;
     }
     .mobile-active-nav-icon{
         background: #ff3956;
@@ -261,6 +280,7 @@ const handleLikeTrackClick = async() =>{
 
     .active-nav-icon:hover{
         background: #ff1337;
+        transition: background 0.3s linear;
     }
     .avatar{
         background: #ff2c4cdf;

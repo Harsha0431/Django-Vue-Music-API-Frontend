@@ -1,8 +1,14 @@
 <script setup>
-import { onBeforeMount, onMounted } from 'vue';
+import { computed, onBeforeMount, onMounted, ref } from 'vue';
 import { userStore } from '@/store/User';
 import { createPlaylistService } from '@/service/playlist/createAddService';
+import { RouterView, RouterLink, useRoute, useRouter } from 'vue-router';
 
+const router = useRouter()
+const routes = useRoute()
+const currentRouteName = computed(() => {
+    return routes.name || 'music'
+})
 //Store objects
 const userStoreObj = userStore()
 
@@ -18,7 +24,9 @@ const handleCreatePlaylist = async() =>{
 }
 
 onBeforeMount(()=>{
-    document.title = 'Music'
+    document.title = 'Music' ;
+    if(!userStoreObj.isLoggedIn)
+        router.push('/login')
 })
 
 onMounted(async()=>{
@@ -29,5 +37,13 @@ onMounted(async()=>{
 <template>
     <div>
         This is Music page
+        <div>
+            Playlist
+        </div>
+        <transition name="fade" mode="out-in">
+            <keep-alive>
+                <RouterView v-if="currentRouteName!='music'" />
+            </keep-alive>
+        </transition>
     </div>
 </template>

@@ -1,11 +1,13 @@
 <script setup>
   import { RouterView } from 'vue-router';
+  import router from './router';
   import Navbar from './components/Navbar/NavbarCreated.vue';
   import MusicLoaderVue from '@/components/loaders/MusicLoader.vue'
+  import SearchView from './views/SearchView.vue';
 
   import { themeStore } from './store/ThemeStore';
   import {loaderStore} from '@/store/LoaderStore'
-  import { onBeforeMount, ref } from 'vue';
+  import { onBeforeMount, ref, watchEffect } from 'vue';
   import VueCookies from 'vue-cookies';
   import { VerifyToken } from './service/login/loginService';
   import { userStore } from './store/User';
@@ -26,11 +28,16 @@
     await VerifyToken(VueCookies.get('user-token'))
       .then((res)=>{
         if(res.code == 1){
+          spotifyStore.is_active = true
           userStoreObj.setUser({username: res.user.username , userMail: res.user.email , userToken: VueCookies.get('user-token') , isLoggedIn:true , userRole:res.user.role})
+        }
+        else{
+          router.push('/login')
         }
       })
       .catch((err)=>{
         console.log(err.message)
+        router.push('/login')
       })
       .finally(()=>{
         loaderStoreObj.toggleLoader()
@@ -38,10 +45,17 @@
       })
   }
 
+  watchEffect(()=>{
+    if(!userStoreObj.isLoggedIn && !default_token_login.value)
+      router.push('/login')
+  })
+
   onBeforeMount(()=>{
     if(default_token_login.value)
       if(VueCookies.get('user-token'))
         verify_user_token()
+      else
+        router.push('/login')
   })
 </script>
 
@@ -54,18 +68,19 @@
       <div v-show="loaderStoreObj.showLoader" class="fixed inset-0 bg-gray-800 opacity-50"></div>
       <MusicLoaderVue />
     </div>
-    <div v-if="spotifyStore.is_active" class="music-player-container absolute bottom-0 right-2">
+    <div class="music-player-container absolute bottom-5 right-2">
       <web-playback />
     </div>
     <nav class="body-nav-container">
       <Navbar />
     </nav>
 
-    <main class="body-main-container w-full">
+    <main class="body-main-container w-full dark:bg-[#18171f]">
+        <!-- <SearchView /> -->
         <RouterView />
     </main>
 
-    <footer class="body-footer-container relative">
+    <footer class="body-footer-container relative dark:bg-[#18171f]">
       This is footer
     </footer>
 
