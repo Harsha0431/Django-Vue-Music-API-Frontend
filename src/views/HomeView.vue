@@ -3,9 +3,12 @@ import { onBeforeMount } from "vue";
 import { useSpotifyStore } from "@/store/SpotifyStore";
 import { ToastStore } from "@/store/ToastStore";
 import MusicBarAnimated from "@/components/loaders/MusicBarAnimated.vue";
+import { useRouter } from "vue-router";
 
 const spotifyStore = useSpotifyStore()
 const toastStore = ToastStore()
+
+const router = useRouter()
 
 onBeforeMount(()=>{
   document.title = 'musiBuzz'
@@ -25,6 +28,12 @@ const handleCategoryPlayBtnClick = async(type) =>{
   await spotifyStore.setCurrentPlayingList(type)
 }
 
+const handleOpenListClick = (type) =>{
+  router.push({
+    name: type
+  })
+}
+
 </script>
 
 <template>
@@ -41,7 +50,7 @@ const handleCategoryPlayBtnClick = async(type) =>{
                 <path fill-rule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z" clip-rule="evenodd" />
               </svg>
             </button>
-            <button class="opacity-75 hover:opacity-100  tracking-wide font-semibold text-gray-900 dark:text-gray-300">
+            <button @click="handleOpenListClick('liked-list')" class="opacity-75 hover:opacity-100  tracking-wide font-semibold text-gray-900 dark:text-gray-300">
               Open
             </button>
           </div>
@@ -66,7 +75,7 @@ const handleCategoryPlayBtnClick = async(type) =>{
                 <path fill-rule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z" clip-rule="evenodd" />
               </svg>
             </button>
-            <button class="opacity-75 hover:opacity-100  tracking-wide font-semibold text-gray-900 dark:text-gray-300">
+            <button @click="handleOpenListClick('recommended-list')" class="opacity-75 hover:opacity-100  tracking-wide font-semibold text-gray-900 dark:text-gray-300">
               Open
             </button>
           </div>
@@ -95,7 +104,7 @@ const handleCategoryPlayBtnClick = async(type) =>{
                 <path fill-rule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z" clip-rule="evenodd" />
               </svg>
             </button>
-            <button class="opacity-75 hover:opacity-100  tracking-wide font-semibold text-gray-900 dark:text-gray-300">
+            <button @click="handleOpenListClick('interested-list')" class="opacity-75 hover:opacity-100  tracking-wide font-semibold text-gray-900 dark:text-gray-300">
               Open
             </button>
           </div>

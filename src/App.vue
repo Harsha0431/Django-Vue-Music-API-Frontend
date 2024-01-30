@@ -1,20 +1,19 @@
 <script setup>
-  import { RouterView } from 'vue-router';
-  import router from './router';
-  import Navbar from './components/Navbar/NavbarCreated.vue';
-  import MusicLoaderVue from '@/components/loaders/MusicLoader.vue'
-  import SearchView from './views/SearchView.vue';
+  import MusicLoaderVue from '@/components/loaders/MusicLoader.vue';
+import { RouterView } from 'vue-router';
+import Navbar from './components/Navbar/NavbarCreated.vue';
+import router from './router';
 
-  import { themeStore } from './store/ThemeStore';
-  import {loaderStore} from '@/store/LoaderStore'
-  import { onBeforeMount, ref, watchEffect } from 'vue';
-  import VueCookies from 'vue-cookies';
-  import { VerifyToken } from './service/login/loginService';
-  import { userStore } from './store/User';
-  import ToastsView from './components/Toasts/ToastsView.vue';
+  import { loaderStore } from '@/store/LoaderStore';
+import { onBeforeMount, ref, watchEffect } from 'vue';
+import VueCookies from 'vue-cookies';
+import ToastsView from './components/Toasts/ToastsView.vue';
+import { VerifyToken } from './service/login/loginService';
+import { themeStore } from './store/ThemeStore';
+import { userStore } from './store/User';
 
-  import WebPlayback from './components/MusicPlayer/WebPlayback.vue';
   import { useSpotifyStore } from '@/store/SpotifyStore';
+import WebPlayback from './components/MusicPlayer/WebPlayback.vue';
 
   const spotifyStore = useSpotifyStore()
   const themeStoreObj = themeStore() ;
@@ -76,7 +75,6 @@
     </nav>
 
     <main class="body-main-container w-full dark:bg-[#18171f]">
-        <!-- <SearchView /> -->
         <RouterView />
     </main>
 

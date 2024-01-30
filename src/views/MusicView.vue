@@ -2,7 +2,7 @@
 import { computed, onBeforeMount, onMounted, ref } from 'vue';
 import { userStore } from '@/store/User';
 import { createPlaylistService } from '@/service/playlist/createAddService';
-import { RouterView, useRoute, useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import LikedListView from './LikedListView.vue';
 import RecommendedList from './RecommendedList.vue';
 import InterestedList from './InterestedList.vue';
@@ -50,17 +50,16 @@ onMounted(async()=>{
 </script>
 
 <template>
-    <div class="flex justify-between px-4">
+    <div class="flex w-full text-gray-50">
         <div>
-            This is Music page
-            Playlist
-        </div>
-        <Transition name="slide-fade">
-            <LikedListView v-if="currentRouteName=='liked-list'"/>
-            <RecommendedList v-else-if="routes.name=='recommended-list'"/>
-            <InterestedList v-else-if="routes.name=='interested-list'" />
+            <span>Your Playlists</span>
+            <Transition name="slide-fade">
+                <LikedListView v-if="currentRouteName=='liked-list'"/>
+                <RecommendedList v-else-if="routes.name=='recommended-list'"/>
+                <InterestedList v-else-if="routes.name=='interested-list'" />
             <LikedListView v-else />
         </Transition>
+        </div>
     </div>
 </template>
 

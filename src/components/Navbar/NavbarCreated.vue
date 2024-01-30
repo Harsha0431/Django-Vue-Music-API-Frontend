@@ -10,7 +10,7 @@ import { themeStore } from '@/store/ThemeStore';
 import { useSpotifyStore } from '@/store/SpotifyStore';
 import { ToastStore } from '@/store/ToastStore';
 import VueCookies from 'vue-cookies';
-import { ref } from 'vue';
+import { ref, watchEffect } from 'vue';
 const themeStoreObj = themeStore();
 const userStoreObj = userStore();
 const spotifyStore = useSpotifyStore();
@@ -118,10 +118,24 @@ const handleLikeTrackClick = async() =>{
     }
 }
 
+function handleAddToPlaylistClick(){
+    alert("Not yet developed")
+}
+
+watchEffect(()=>{
+    if(toastStoreObj.showAcknowledgement){
+        setTimeout(()=>{toastStoreObj.showAcknowledgement = false} , 5000)
+    }
+})
+
+
 </script>
 
 <template>
     <div class="w-full sticky z-50 dark:bg-[#18171f]">
+        <div v-if="toastStoreObj.showAcknowledgement" :class="[toastStoreObj.showAcknowledgement?'translate-y-0':'-translate-y-24 hidden']" class="transition-all duration-1000 px-2 py-2 bg-[#ff3956] text-center rounded-ee-full rounded-es-full">
+            <span class="text-[#fff] tracking-wider max-ssm:text-[14px] max-vsm:text-[13px]">{{ toastStoreObj.acknowledgementMessage }}</span>
+        </div>
         <!-- Try nav color with #211e2b -->
         <Disclosure as="nav" class="navbar dark:bg-[#17161f] bg-white border-b-2 dark:border-b-0 shadow-sm dark:shadow-none " v-slot="{ open }">
             <div class="mx-auto sm:max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -243,7 +257,9 @@ const handleLikeTrackClick = async() =>{
                         </svg>
                     </button>
                 </div>
+
                 <button class="relative active:animate-ping" :class="[isLikeInProgress?'animate-ping':'']" @click="handleLikeTrackClick">
+                    {{ console.log(spotifyStore.liked_list.includes(spotifyStore.track_list[0])) }}
                     <svg v-if="spotifyStore.liked_list.includes(spotifyStore.track_list[0])" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 like-icon-filled fill-red-600 ">
                         <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
                     </svg>
@@ -251,6 +267,13 @@ const handleLikeTrackClick = async() =>{
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
                     </svg>
                 </button>
+                <!-- Add to playlist -->
+                <button @click="handleAddToPlaylistClick">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="stroke-[#ef4b56] transition-colors hover:stroke-[#ef4b56f4] w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                </button>
+
             </div>
         </div>
     </div>

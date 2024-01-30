@@ -24,6 +24,8 @@ onMounted(()=>{
 
         if(e.data.position==e.data.duration && e.data.duration!=0){
           store.nextTrack()
+                    console.log('here not equal interrupt')
+
           // store.addToCompletelyListenedList(recent)
           // store.track_list.shift()
           // store.previous_list.unshift(recent)
@@ -41,6 +43,7 @@ onMounted(()=>{
         }
 
         if (e.data.position==0 && store.isInterrupted){
+                    console.log('here not equal interrupt')
           EmbedController.loadUri(store.track_list[store.current_track])
           EmbedController.play()
           store.isInterrupted = false
@@ -52,20 +55,24 @@ onMounted(()=>{
         }
 
         if (e.data.position!=e.data.duration && store.pauseClicked){
+                    console.log('here not equal interrupt')
+
           EmbedController.pause()
           store.isPlaying = false
           store.pauseClicked = false
         }
 
         if (e.data.position==e.data.duration && e.data.duration==0){
+                    console.log('here not equal interrupt')
+
           store.isPlaying = false
           EmbedController.play()
         }
 
         if (e.data.position!=e.data.duration && store.isInterrupted) {
           EmbedController.loadUri(store.track_list[store.current_track])
-          EmbedController.play()
           store.isInterrupted = false
+          EmbedController.play()
         }
       });
     };
