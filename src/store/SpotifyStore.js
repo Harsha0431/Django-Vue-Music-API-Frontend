@@ -68,7 +68,10 @@ export const useSpotifyStore = defineStore('Spotify Store' ,()=>{
             const recent = track_list.value[current_track.value]
             track_list.value.splice(current_track.value, 1)
             previous_list.value.unshift(recent)
-            current_track.value = Math.floor(Math.random()*track_list.value.length) % track_list.value.length
+            if (current_playing.value == 'liked' || current_playing.value == 'interested')
+                current_track.value = 0
+            else
+                current_track.value = Math.floor(Math.random() * track_list.value.length) % track_list.value.length
             isInterrupted.value = true
             await fetchRecommendedTracks()
         }
@@ -88,8 +91,7 @@ export const useSpotifyStore = defineStore('Spotify Store' ,()=>{
                     if (!previous_list.value.includes(track))
                         track_set.add(track)
                 })
-                recommendation_list.value = res.data
-                track_list.value = [...track_set]
+                recommendation_list.value = [...track_set]
             } else console.error('Failed to fetch recommended tracks')
         })
     }
@@ -110,10 +112,12 @@ export const useSpotifyStore = defineStore('Spotify Store' ,()=>{
     }
 
     const setCurrentPlayingList = async (type) => {
-        if (type == 'liked')
-            track_list.value = liked_list.value
+        if (type == 'liked') {
+            const newList = [...liked_list.value]
+            track_list.value = [].concat(newList)
+        }
         else if (type == 'interested')
-            track_list.value = interested_list_from_model.value
+            track_list.value = [].concat(interested_list_from_model.value)
         else {
             if (recommendation_list.value.length > 0) {
                 const filteredRecommendations = recommendation_list.value.filter((track) => {
@@ -125,7 +129,6 @@ export const useSpotifyStore = defineStore('Spotify Store' ,()=>{
                 }
                 else
                     await fetchRecommendedTracks_from_db('custom')
-
             }
             else
                 await fetchRecommendedTracks_from_db('custom')

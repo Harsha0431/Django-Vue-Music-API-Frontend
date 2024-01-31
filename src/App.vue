@@ -61,7 +61,7 @@ import WebPlayback from './components/MusicPlayer/WebPlayback.vue';
 
 //TODO:Add this snippet in body-container class {{themeStoreObj.isDarkTheme&& 'bg-[#1a1b1f]'}} for dark theme
 <template>
-  <div class="body-container" :class="[ 'body-container' , themeStoreObj.isDarkTheme?'dark':'w-full']">
+  <div class="body-container" :class="['body-container overflow-hidden h-[100vh] w-[100vw]' , themeStoreObj.isDarkTheme?'dark':'w-full']">
     <ToastsView />
     <div class="loader-box fixed inset-0 bg-gray-800 opacity-50 top-0 z-[100]" v-show="loaderStoreObj.showLoader">
       <div v-show="loaderStoreObj.showLoader" class="fixed inset-0 bg-gray-800 opacity-50"></div>
@@ -74,7 +74,7 @@ import WebPlayback from './components/MusicPlayer/WebPlayback.vue';
       <Navbar />
     </nav>
 
-    <main class="body-main-container w-full dark:bg-[#18171f]">
+    <main class="body-main-container w-full h-full overflow-hidden dark:bg-[#18171f]">
         <RouterView />
     </main>
 

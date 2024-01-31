@@ -29,19 +29,20 @@ const handleCreatePlaylist = async() =>{
 
 onBeforeMount(()=>{
     document.title = 'Music' ;
-    if(!userStoreObj.isLoggedIn)
+    if(!userStoreObj.isLoggedIn){
         router.push('/login')
-    else{
-        if(currentRouteName.value == 'liked-list'){
-            childComponent.value = LikedListView
-        }
-        else if (currentRouteName.value == 'interested-list')
-            childComponent.value = InterestedList
-        else if (currentRouteName.value == 'recommended-list')
-            childComponent.value = RecommendedList
-        else
-            childComponent.value = LikedListView
+        return
     }
+    
+    if(currentRouteName.value == 'liked-list'){
+        childComponent.value = LikedListView
+    }
+    else if (currentRouteName.value == 'interested-list')
+        childComponent.value = InterestedList
+    else if (currentRouteName.value == 'recommended-list')
+        childComponent.value = RecommendedList
+    else
+        childComponent.value = LikedListView
 })
 
 onMounted(async()=>{
@@ -50,15 +51,17 @@ onMounted(async()=>{
 </script>
 
 <template>
-    <div class="flex w-full text-gray-50">
-        <div>
-            <span>Your Playlists</span>
+    <div class="flex w-full h-full dark:text-gray-50 px-2 ssm:px-4 max-ssm:flex-col gap-y-2 ssm:gap-x-6">
+        <div class="ssm:w-[20%]">
+            <button>Liked list</button>
+        </div>
+        <div class="h-full ssm:w-[80%]">
             <Transition name="slide-fade">
                 <LikedListView v-if="currentRouteName=='liked-list'"/>
                 <RecommendedList v-else-if="routes.name=='recommended-list'"/>
                 <InterestedList v-else-if="routes.name=='interested-list'" />
-            <LikedListView v-else />
-        </Transition>
+                <LikedListView v-else />
+            </Transition>
         </div>
     </div>
 </template>
@@ -77,4 +80,5 @@ onMounted(async()=>{
     transform: translateX(20px);
     opacity: 0;
 }
+
 </style>

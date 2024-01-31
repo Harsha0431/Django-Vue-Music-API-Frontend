@@ -25,7 +25,7 @@ const toggleTheme = () =>{
 
 const navigation = [
     { name: 'Home', link: '/', current: true },
-    { name: 'Music', link: '/music', current: false },
+    { name: 'library', link: '/library', current: false },
     { name: 'Artist', link: '/artist', current: false },
     { name: 'About', link: '/about', current: false },
 ]
@@ -46,9 +46,11 @@ const handleTrackChange = (mode) =>{
     if(mode == 'next'){
         if(spotifyStore.track_list.length < 2)
         {
-            toastStoreObj.message = "No tracks in queue to play"
+            toastStoreObj.message = "No tracks in queue to play. Skipped to recommendation list"
             toastStoreObj.type = "alert"
             toastStoreObj.showToast = true
+
+            spotifyStore.setCurrentPlayingList('recommended')
             return
         }
         spotifyStore.nextTrack()
@@ -156,7 +158,7 @@ watchEffect(()=>{
                         <div class="flex justify-center gap-4 sm:gap-8 md:gap-12 ">
                             <div class="hidden sm:flex gap-2 md:gap-4">
                                 <RouterLink to="/" active-class="active-nav-icon" class="nav-icon text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">Home</RouterLink>
-                                <RouterLink to="/music" active-class="active-nav-icon" class="nav-icon text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">Music</RouterLink>
+                                <RouterLink to="/library" active-class="active-nav-icon" class="nav-icon text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">Library</RouterLink>
                             </div>
                             <button class="nav-icon-search stroke-red-500 focus:animate-bounce focus:ring-0 ring-1 ring-inset ring-red-500 p-1.5 rounded-full flex justify-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
                                 <svg viewBox="0 0 24 24" class="w-6 flex" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -259,8 +261,7 @@ watchEffect(()=>{
                 </div>
 
                 <button class="relative active:animate-ping" :class="[isLikeInProgress?'animate-ping':'']" @click="handleLikeTrackClick">
-                    {{ console.log(spotifyStore.liked_list.includes(spotifyStore.track_list[0])) }}
-                    <svg v-if="spotifyStore.liked_list.includes(spotifyStore.track_list[0])" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 like-icon-filled fill-red-600 ">
+                    <svg v-if="spotifyStore.liked_list.includes(spotifyStore.track_list[spotifyStore.current_track])" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 like-icon-filled fill-red-600 ">
                         <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
                     </svg>
                     <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6 lik-icon-outline stroke-[#ef4b56f4] hover:animate-pulse hover:stroke-[#ef4b56]">

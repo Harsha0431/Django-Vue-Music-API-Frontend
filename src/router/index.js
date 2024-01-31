@@ -18,8 +18,8 @@ const router = createRouter({
             component: () => import('../views/AboutView.vue')
         },
         {
-            path: '/music',
-            name: 'music',
+            path: '/library',
+            name: 'library',
             component: () => import('../views/MusicView.vue'),
             children: [
                 { path: '', component: () => import('../views/LikedListView.vue'), name:'liked-list' },
