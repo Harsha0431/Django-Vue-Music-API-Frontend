@@ -67,9 +67,6 @@ import WebPlayback from './components/MusicPlayer/WebPlayback.vue';
       <div v-show="loaderStoreObj.showLoader" class="fixed inset-0 bg-gray-800 opacity-50"></div>
       <MusicLoaderVue />
     </div>
-    <div class="music-player-container absolute bottom-5 right-2">
-      <web-playback />
-    </div>
     <nav class="body-nav-container">
       <Navbar />
     </nav>
@@ -79,6 +76,9 @@ import WebPlayback from './components/MusicPlayer/WebPlayback.vue';
     </main>
 
     <footer class="body-footer-container relative dark:bg-[#18171f]">
+      <div class="music-player-container">
+        <web-playback />
+      </div>
       This is footer
     </footer>
 

@@ -53,7 +53,7 @@ onMounted(async()=>{
 <template>
     <div class="flex w-full h-full dark:text-gray-50 px-2 ssm:px-4 max-ssm:flex-col gap-y-2 ssm:gap-x-6">
         <div class="ssm:w-[20%]">
-            <button>Liked list</button>
+            <button class="w-fit">Liked list</button>
         </div>
         <div class="h-full ssm:w-[80%]">
             <Transition name="slide-fade">
