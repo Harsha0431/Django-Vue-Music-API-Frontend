@@ -10,9 +10,9 @@ onMounted(()=>{
   window.onSpotifyIframeApiReady = async(IFrameAPI) => {
     const element = document.getElementById('embed-iframe');
     const options = {
-      width: `${window.innerWidth > 500?'450':'100%'}`,
-      height: `${window.innerWidth > 500?'90':'100'}`,
-      uri:`${store.track_list[store.current_track]}`
+      width: `${window.innerWidth > 500?'100%':'100%'}`,
+      height: `${window.innerWidth > 500?'80':'80'}`,
+      uri:`${store.track_list[store.current_track]}`,
     };
     const callback = (EmbedController) => {
       EmbedController.addListener('playback_update', e => {
@@ -24,8 +24,6 @@ onMounted(()=>{
 
         if(e.data.position==e.data.duration && e.data.duration!=0){
           store.nextTrack()
-                    console.log('here not equal interrupt')
-
           // store.addToCompletelyListenedList(recent)
           // store.track_list.shift()
           // store.previous_list.unshift(recent)
@@ -43,7 +41,6 @@ onMounted(()=>{
         }
 
         if (e.data.position==0 && store.isInterrupted){
-                    console.log('here not equal interrupt')
           EmbedController.loadUri(store.track_list[store.current_track])
           EmbedController.play()
           store.isInterrupted = false
@@ -63,10 +60,7 @@ onMounted(()=>{
         }
 
         if (e.data.position==e.data.duration && e.data.duration==0){
-                    console.log('here not equal interrupt')
-
           store.isPlaying = false
-          EmbedController.play()
         }
 
         if (e.data.position!=e.data.duration && store.isInterrupted) {
@@ -89,7 +83,7 @@ onMounted(()=>{
 
 
 <template>
-  <div class="px-4 flex justify-end">
-    <div id="embed-iframe"></div>
+  <div class="px-4 pb-2 flex justify-end">
+    <div id="embed-iframe" class=""></div>
   </div>
 </template>

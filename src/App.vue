@@ -75,11 +75,8 @@ import WebPlayback from './components/MusicPlayer/WebPlayback.vue';
         <RouterView />
     </main>
 
-    <footer class="body-footer-container relative dark:bg-[#18171f]">
-      <div class="music-player-container">
-        <web-playback />
-      </div>
-      This is footer
+    <footer class="body-footer-container sticky bottom-0 dark:bg-[#18171f]">
+      <web-playback />
     </footer>
 
   </div>

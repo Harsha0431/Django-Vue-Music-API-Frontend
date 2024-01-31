@@ -77,6 +77,21 @@ export const useSpotifyStore = defineStore('Spotify Store' ,()=>{
         }
     }
 
+    const playSelectedTrack = (id) => {
+        if (track_list.value.length > 0) {
+            const recent = track_list.value[current_track.value]
+            track_list.value.splice(current_track.value, 1)
+            previous_list.value.unshift(recent)
+        }
+        if (track_list.value.includes(id)) {
+            const index = track_list.value.indexOf(id)
+            track_list.value.splice(index , 1)
+        }
+        track_list.value.unshift(id)
+        current_track.value = 0
+        isInterrupted.value = true
+    }
+
     async function fetchRecommendedTracks_from_db(req_type) {
         await fetchRecommendedTracksService().then((res) => {
             if (res.code == 1) {
@@ -142,6 +157,6 @@ export const useSpotifyStore = defineStore('Spotify Store' ,()=>{
         completely_listened_list, liked_list, interested_list_from_model, current_playing, playing_list, recommendation_list,
         pauseClicked,
         setActive, setTrack, addToTrackList, addTrackToInterestedList, addToCompletelyListenedList, addToLikedList,
-        nextTrack, fetchRecommendedTracks, setCurrentPlayingList
+        nextTrack, fetchRecommendedTracks, setCurrentPlayingList , playSelectedTrack
     };
 })
