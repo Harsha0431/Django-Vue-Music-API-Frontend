@@ -41,7 +41,6 @@ onBeforeMount(async()=>{
         .then((res)=>{
             if(res.code == 1){
                 playlistStore.updateLikedListData(res.data)
-                console.log(playlistStore.likedList.data)
                 dataFetched.value = 1
             }
             else if(res.code == -2){

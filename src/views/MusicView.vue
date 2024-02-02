@@ -6,6 +6,7 @@ import { useRoute, useRouter } from 'vue-router';
 import LikedListView from './LikedListView.vue';
 import RecommendedList from './RecommendedList.vue';
 import InterestedList from './InterestedList.vue';
+import { useSpotifyStore } from '@/store/SpotifyStore';
 
 const router = useRouter()
 const routes = useRoute()
@@ -17,6 +18,8 @@ const userStoreObj = userStore()
 
 //Local Variables
 const childComponent = ref()
+
+const spotifyStore = useSpotifyStore()
 
 //Functions
 const handleCreatePlaylist = async() =>{
@@ -33,14 +36,18 @@ onBeforeMount(()=>{
         router.push('/login')
         return
     }
-    
     if(currentRouteName.value == 'liked-list'){
         childComponent.value = LikedListView
+        spotifyStore.current_playing = 'liked'
     }
-    else if (currentRouteName.value == 'interested-list')
+    else if (currentRouteName.value == 'interested-list'){
         childComponent.value = InterestedList
-    else if (currentRouteName.value == 'recommended-list')
+        spotifyStore.current_playing = 'interested'
+    }
+    else if (currentRouteName.value == 'recommended-list'){
+        spotifyStore.current_playing = 'recommended'
         childComponent.value = RecommendedList
+    }
     else
         childComponent.value = LikedListView
 })
