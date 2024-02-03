@@ -28,9 +28,24 @@ export const usePlaylistStore = defineStore('playlist-store' ,() => {
         })
     }
 
+    const updateInterestedList = async (data) => {
+        interestedList.value.data = data
+        interestedList.value.list = []
+        data.forEach((track) => {
+            interestedList.value.list.push(track.track_id)
+        })
+    }
+
+    const updateRecommendedList = async (data) => {
+        recommendedList.value.data = data
+        recommendedList.value.list = []
+        data.forEach((track) => {
+            recommendedList.value.list.push(track.track_id)
+        })
+    }
 
     return {
         likedList, interestedList, customPlaylist, recommendedList,
-        updateLikedListData
+        updateLikedListData , updateInterestedList, updateRecommendedList
     }
 })

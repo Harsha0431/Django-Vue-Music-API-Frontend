@@ -95,12 +95,15 @@ export const useSpotifyStore = defineStore('Spotify Store' ,()=>{
     async function fetchRecommendedTracks_from_db(req_type) {
         await fetchRecommendedTracksService().then((res) => {
             if (res.code == 1) {
-                if (req_type == 'custom')
-                {
+                if (req_type == 'from-data-list') {
                     recommendation_list.value = res.data
-                    track_list.value = recommendation_list.value
                     return
                 }
+                    if (req_type == 'custom') {
+                        recommendation_list.value = res.data
+                        track_list.value = recommendation_list.value
+                        return
+                    }
                 const track_set = new Set(track_list.value)
                 res.data.forEach((track) => {
                     if (!previous_list.value.includes(track))
@@ -153,10 +156,30 @@ export const useSpotifyStore = defineStore('Spotify Store' ,()=>{
     }
 
     return {
-        is_active, current_track, track_list, isPlaying, isInterrupted, previous_list, interested_list,
-        completely_listened_list, liked_list, interested_list_from_model, current_playing, playing_list, recommendation_list,
+        is_active,
+        current_track,
+        track_list,
+        isPlaying,
+        isInterrupted,
+        previous_list,
+        interested_list,
+        completely_listened_list,
+        liked_list,
+        interested_list_from_model,
+        current_playing,
+        playing_list,
+        recommendation_list,
         pauseClicked,
-        setActive, setTrack, addToTrackList, addTrackToInterestedList, addToCompletelyListenedList, addToLikedList,
-        nextTrack, fetchRecommendedTracks, setCurrentPlayingList , playSelectedTrack
-    };
+        setActive,
+        setTrack,
+        addToTrackList,
+        addTrackToInterestedList,
+        addToCompletelyListenedList,
+        addToLikedList,
+        nextTrack,
+        fetchRecommendedTracks,
+        setCurrentPlayingList,
+        playSelectedTrack,
+        fetchRecommendedTracks_from_db
+    }
 })
