@@ -4,12 +4,13 @@ const URI = import.meta.env.VITE_URI
 
 export async function getLikedPlaylistData(token, list) {
     return axios
-        .post(`${URI}/api/tracks/playlist/preview/data/`, list , {
+        .post(`${URI}/api/tracks/playlist/preview/data/`, list, {
             headers: {
                 Authorization: `TOKEN ${token}`
             }
         })
         .then((response) => {
+            console.log(response.data)
             return response.data
         })
         .catch((err) => {

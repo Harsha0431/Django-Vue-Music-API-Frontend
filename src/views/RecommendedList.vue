@@ -22,22 +22,22 @@ const router = useRouter()
 
 const dataFetched = ref(0)
 
-async function fetchRecommendedTracksData(){
+async function fetchRecommendedTracksData() {
     await getLikedPlaylistData(userStoreObj.userToken, {
-            track_list: spotifyStore.recommendation_list
-        }).then((res) => {
-            if (res.code == 1) {
-                playlistStore.updateRecommendedList(res.data)
-                dataFetched.value = 1
-            } else if (res.code == -2) {
-                toastStore.message = 'Please login to continue'
-                toastStore.type = 'alert'
-                toastStore.showToast = true
-                router.push('/login')
-            } else {
-                dataFetched.value = -1
-            }
-        })
+        track_list: spotifyStore.recommendation_list
+    }).then((res) => {
+        if (res.code == 1) {
+            playlistStore.updateRecommendedList(res.data)
+            dataFetched.value = 1
+        } else if (res.code == -2) {
+            toastStore.message = 'Please login to continue'
+            toastStore.type = 'alert'
+            toastStore.showToast = true
+            router.push('/login')
+        } else {
+            dataFetched.value = -1
+        }
+    })
 }
 
 onBeforeMount(async () => {
@@ -45,18 +45,16 @@ onBeforeMount(async () => {
         router.push('/login')
         return
     }
-    if(spotifyStore.recommendation_list.length>0){
+    if (spotifyStore.recommendation_list.length > 0) {
         if (areArraysEqual(spotifyStore.recommendation_list, playlistStore.recommendedList.list)) {
             dataFetched.value = 1
             return
         }
         fetchRecommendedTracksData()
-    }
-    else{
-        await spotifyStore.fetchRecommendedTracks_from_db('from-data-list')
-            .then(()=>{
-                fetchRecommendedTracksData()
-            })
+    } else {
+        await spotifyStore.fetchRecommendedTracks_from_db('from-data-list').then(() => {
+            fetchRecommendedTracksData()
+        })
     }
 })
 </script>

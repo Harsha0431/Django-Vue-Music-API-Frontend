@@ -14,13 +14,14 @@ const playSelectedTrack = (id) => {
         toastStore.showToast = true
     }
 }
-
 </script>
 
 <template>
     <div class="flex w-full h-full justify-center overflow-y-auto">
         <div class="flex h-full w-full justify-center pr-2">
-            <div class="flex gap-x-4 flex-wrap gap-y-3 justify-start relative">
+            <div
+                class="flex flex-col w-full h-fit gap-x-4 flex-wrap gap-y-3 justify-start relative"
+            >
                 <div
                     v-for="(track, index) in props.list"
                     :key="index"
