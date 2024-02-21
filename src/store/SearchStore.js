@@ -1,14 +1,11 @@
-import { defineStore } from "pinia";
+import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-export const useSearchStore = defineStore('search_store',()=>{
+export const useSearchStore = defineStore('search_store', () => {
+    const showSearchTab = ref(false);
     const searchText = ref('')
-    const category = ref('')
+    const category = ref('artist')
     const category_list = [
-        {
-            name: 'Album',
-            value: 'album'
-        },
         {
             name: 'Artist',
             value: 'artist'
@@ -20,6 +17,9 @@ export const useSearchStore = defineStore('search_store',()=>{
     ]
 
     return {
-        searchText, category, category_list
+        showSearchTab,
+        searchText,
+        category,
+        category_list
     }
 })

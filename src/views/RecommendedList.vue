@@ -61,16 +61,18 @@ onBeforeMount(async () => {
 
 <template>
     <div class="h-full w-full">
-        <span v-if="dataFetched == 0">Loading ...</span>
-        <span v-else-if="dataFetched == -1"
+        <span v-if="dataFetched == 0" class="text-gray-900 dark:text-gray-200">Loading ...</span>
+        <span v-else-if="dataFetched == -1" class="text-gray-900 dark:text-gray-200"
             >Failed to load data. Refresh this page or view other library</span
         >
         <div v-else class="flex flex-col gap-y-4 h-full w-full">
             <div class="flex flex-col align-middle text-start">
-                <span class="text-2xl tracking-wide text-gray-300 font-bold bg-transparent">
+                <span
+                    class="text-2xl tracking-wide dark:text-gray-300 text-gray-900 font-bold bg-transparent"
+                >
                     Recommended Gems
                 </span>
-                <span class="text-sm tracking-wide text-gray-400 font-semibold">
+                <span class="text-sm tracking-wide dark:text-gray-400 text-gray-700 font-semibold">
                     Tracks carefully selected based on your preferences.
                 </span>
             </div>

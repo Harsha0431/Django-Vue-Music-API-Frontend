@@ -32,6 +32,7 @@ const handleCreatePlaylist = async () => {
 }
 
 watchEffect(() => {
+    console.log(childRouteName.value)
     if (childRouteName.value == 'liked-list') {
         childComponent.value = LikedListView
         spotifyStore.current_playing = 'liked'
@@ -67,11 +68,83 @@ onBeforeMount(() => {
     <div
         class="flex w-full h-full dark:text-gray-50 px-2 ssm:px-4 max-ssm:flex-col gap-y-4 ssm:gap-x-6"
     >
-        <div class="ssm:w-[300px] md:w-[400px] flex flex-col">
-            <button class="w-fit" @click="childRouteName = 'liked-list'">Liked Songs</button>
-            <button class="w-fit" @click="childRouteName = 'interested-list'">Interested</button>
-            <button class="w-fit" @click="childRouteName = 'recommended-list'">Recommended</button>
-            <button class="w-fit">Your Playlists</button>
+        <div
+            class="ssm:w-[300px] max-ssm:hidden md:w-[400px] gap-y-2 flex flex-col px-4 py-2 ssm:text-gray-300 ssm:hover:text-gray-200 text-gray-200 relative mt-8 text-[18px] max-ssm:text-[16px]"
+        >
+            <button
+                class="w-fit tracking-wide font-semibold dark:hover:text-gray-300 hover:text-gray-800"
+                @click="childRouteName = 'liked-list'"
+                :class="[
+                    childRouteName == 'liked-list'
+                        ? 'text-gray-900 dark:text-gray-200'
+                        : 'text-gray-700 dark:text-gray-400'
+                ]"
+            >
+                Liked Songs
+            </button>
+            <button
+                class="w-fit tracking-wide font-semibold dark:hover:text-gray-300 hover:text-gray-800"
+                @click="childRouteName = 'interested-list'"
+                :class="[
+                    childRouteName == 'interested-list'
+                        ? 'text-gray-900 dark:text-gray-200'
+                        : 'text-gray-700 dark:text-gray-400'
+                ]"
+            >
+                Interested
+            </button>
+            <button
+                class="w-fit tracking-wide font-semibold dark:hover:text-gray-300 hover:text-gray-800"
+                @click="childRouteName = 'recommended-list'"
+                :class="[
+                    childRouteName == 'recommended-list'
+                        ? 'text-gray-900 dark:text-gray-200'
+                        : 'text-gray-700 dark:text-gray-400'
+                ]"
+            >
+                Recommended
+            </button>
+            <button
+                class="w-fit tracking-wide font-semibold dark:hover:text-gray-300 hover:text-gray-800"
+                :class="[
+                    childRouteName == 'custom-playlist'
+                        ? 'text-gray-900 dark:text-gray-200'
+                        : 'text-gray-700 dark:text-gray-400'
+                ]"
+            >
+                Your Playlists
+            </button>
+        </div>
+        <div class="ssm:hidden flex w-full justify-end p-2">
+            <select
+                v-model="childRouteName"
+                class="bg-transparent dark:text-gray-200 text-gray-800 border px-0.5 py-1 border-gray-400 focus:outline-none font-semibold tracking-wide"
+            >
+                <option
+                    @click="childRouteName = 'liked-list'"
+                    value="liked-list"
+                    class="text-gray-800 font-semibold tracking-wide"
+                >
+                    Favorites
+                </option>
+                <option
+                    @click="childRouteName = 'interested-list'"
+                    value="interested-list"
+                    class="text-gray-800 font-semibold tracking-wide"
+                >
+                    Interested
+                </option>
+                <option
+                    @click="childRouteName = 'recommended-list'"
+                    value="recommended-list"
+                    class="text-gray-800 font-semibold tracking-wide"
+                >
+                    Recommended
+                </option>
+                <option value="playlist" class="text-gray-800 font-semibold tracking-wide">
+                    Your Playlists
+                </option>
+            </select>
         </div>
         <div class="h-full min-h-[1px] pb-4 w-full">
             <Transition name="slide-fade" class="w-full h-full">

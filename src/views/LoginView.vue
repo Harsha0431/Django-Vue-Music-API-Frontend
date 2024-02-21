@@ -44,7 +44,7 @@ const handleLoginSubmit = async () => {
                 toastStore.message = 'Logged in successfully'
                 toastStore.type = 'success'
                 toastStore.showToast = true
-                router.back()
+                router.push('/')
             } else {
                 toastStore.message = res.message
                 toastStore.type = res.code == 0 ? 'alert' : 'error'
@@ -89,11 +89,11 @@ const handleSignupSubmit = async () => {
 }
 
 watchEffect(() => {
-    if (userStoreObj.isLoggedIn) router.back()
+    if (userStoreObj.isLoggedIn) router.push('/')
 })
 
 onBeforeMount(() => {
-    if (userStoreObj.isLoggedIn) router.back()
+    if (userStoreObj.isLoggedIn) router.push('/')
 })
 
 onMounted(() => {
