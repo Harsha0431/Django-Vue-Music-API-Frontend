@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue';
+import HomeView from '../views/HomeView.vue'
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,7 +7,7 @@ const router = createRouter({
         {
             path: '/',
             name: 'home',
-            component: HomeView,
+            component: HomeView
         },
         {
             path: '/about',
@@ -22,9 +22,21 @@ const router = createRouter({
             name: 'library',
             component: () => import('../views/MusicView.vue'),
             children: [
-                { path: '', component: () => import('../views/LikedListView.vue'), name:'liked-list' },
-                { path: 'interested', component: () => import('../views/InterestedList.vue'), name:'interested-list' },
-                { path: 'recommended', component: () => import('../views/RecommendedList.vue'), name: 'recommended-list' }
+                {
+                    path: '',
+                    component: () => import('../views/LikedListView.vue'),
+                    name: 'liked-list'
+                },
+                {
+                    path: 'interested',
+                    component: () => import('../views/InterestedList.vue'),
+                    name: 'interested-list'
+                },
+                {
+                    path: 'recommended',
+                    component: () => import('../views/RecommendedList.vue'),
+                    name: 'recommended-list'
+                }
             ]
         },
         {
@@ -41,8 +53,20 @@ const router = createRouter({
             path: '/login',
             name: 'Login',
             component: () => import('../views/LoginView.vue')
+        },
+        {
+            path: '/search/:q?/:type?/:offset?/:limit?',
+            name: 'search',
+            component: () => import('../views/SearchView.vue')
         }
     ]
+})
+
+router.beforeEach((to, from) => {
+    if (to.name == from.name) {
+        if (to.fullPath != from.fullPath) return true
+        return { name: 'home' }
+    } else return true
 })
 
 export default router

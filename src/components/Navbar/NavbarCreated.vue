@@ -23,9 +23,6 @@ import { ToastStore } from '@/store/ToastStore'
 import VueCookies from 'vue-cookies'
 import { ref, watchEffect } from 'vue'
 
-import { useSearchStore } from '@/store/SearchStore'
-
-const searchStore = useSearchStore()
 
 const themeStoreObj = themeStore()
 const userStoreObj = userStore()
@@ -201,8 +198,8 @@ watchEffect(() => {
                                     >Library</RouterLink
                                 >
                             </div>
-                            <button
-                                @click="searchStore.showSearchTab = true"
+                            <RouterLink
+                                to="/search"
                                 class="nav-icon-search stroke-red-500 focus:animate-bounce focus:ring-0 ring-1 ring-inset ring-red-500 focus:ring-red-500 p-1.5 rounded-full flex justify-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
                             >
                                 <svg
@@ -226,7 +223,7 @@ watchEffect(() => {
                                         ></path>
                                     </g>
                                 </svg>
-                            </button>
+                            </RouterLink>
                             <div class="hidden sm:flex gap-2 md:gap-6">
                                 <RouterLink
                                     to="/artist"

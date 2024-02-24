@@ -24,7 +24,6 @@ const SpotifyStore = useSpotifyStore()
 
 async function addInterestedListToDb() {
     await addInterestedListToDbService({"track_list":SpotifyStore.interested_list, message:"On Close" })
-
 }
 
 // This triggers when user switch b\w tab

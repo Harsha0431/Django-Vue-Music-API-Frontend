@@ -65,20 +65,25 @@ onBeforeMount(() => {
 
 // const containerId = document.getElementById('body-container-listener');
 
-document.body.addEventListener('keydown', (e) => {
+document.body.addEventListener('keydown', async (e) => {
     if (e.key == 'Escape') {
         if (searchStore.showSearchTab) {
-            searchStore.showSearchTab = false
+            const routePushValidate = await router.push('/')
+            if (!routePushValidate) searchStore.showSearchTab = false
+            else {
+                router.push('/')
+                searchStore.showSearchTab = false
+            }
         }
     }
 })
-
 </script>
 
 //TODO:Add this snippet in body-container class
 {{ themeStoreObj.isDarkTheme && 'bg-[#1a1b1f]' }} for dark theme
 <template>
     <div
+        disabled
         class="body-container"
         id="body-container-listener"
         :class="[
@@ -88,7 +93,7 @@ document.body.addEventListener('keydown', (e) => {
     >
         <ToastsView />
         <SearchTab />
-        
+
         <div
             class="loader-box fixed inset-0 bg-gray-800 opacity-50 top-0 z-[100]"
             v-show="loaderStoreObj.showLoader"
@@ -138,6 +143,5 @@ document.body.addEventListener('keydown', (e) => {
 .body-footer-container {
     grid-area: footer;
 }
-
 </style>
 ./helpers/ToggleTheme/ToggleTheme
