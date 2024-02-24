@@ -56,9 +56,12 @@ onBeforeMount(async () => {
 <template>
     <div class="h-full w-full">
         <span v-if="dataFetched == 0" class="text-gray-900 dark:text-gray-200">Loading ...</span>
-        <span v-else-if="dataFetched == -1" class="text-gray-900 dark:text-gray-200"
-            >Failed to load data. Refresh this page or view other library</span
-        >
+        <span v-else-if="dataFetched == -1" class="text-gray-900 dark:text-gray-200">
+            Failed to load data. Refresh this page or view other library
+        </span>
+        <span v-else-if="playlistStore.likedList.data.length<1" class="text-gray-900 dark:text-gray-200">
+            Failed to load data. Refresh this page or view other library
+        </span>
         <div v-else class="flex flex-col gap-y-4 h-full w-full">
             <div class="flex flex-col align-middle text-start">
                 <span

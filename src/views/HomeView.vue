@@ -155,7 +155,7 @@ const handleOpenListClick = (type) => {
                             </svg>
                         </button>
                         <button
-                            @click="handleOpenListClick('recommended-list')"
+                            @click="handleOpenListClick('interested-list')"
                             class="opacity-75 hover:opacity-100 tracking-wide font-semibold text-gray-900 dark:text-gray-300"
                         >
                             Open
@@ -242,7 +242,7 @@ const handleOpenListClick = (type) => {
                             </svg>
                         </button>
                         <button
-                            @click="handleOpenListClick('interested-list')"
+                            @click="handleOpenListClick('recommended-list')"
                             class="opacity-75 hover:opacity-100 tracking-wide font-semibold text-gray-900 dark:text-gray-300"
                         >
                             Open
