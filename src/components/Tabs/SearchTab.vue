@@ -2,12 +2,13 @@
 import { useSearchStore } from '@/store/SearchStore'
 import { useRouter } from 'vue-router'
 import { ToastStore } from '@/store/ToastStore'
+import { getSearchQuery } from '@/service/search/SearchService'
 
 const router = useRouter()
 const searchStore = useSearchStore()
 const toastStore = ToastStore()
 
-const handleSearchBtnClick = () => {
+const handleSearchBtnClick = async () => {
     if (searchStore.searchText.length < 1) {
         toastStore.showToast = true
         toastStore.message = 'Please enter some text'
@@ -24,7 +25,32 @@ const handleSearchBtnClick = () => {
             limit: searchStore.limit
         }
     })
+    try {
+        console.log(`Searching for ${searchStore.searchText} in ${searchStore.category}`)
+        await getSearchQuery(
+            searchStore.searchText,
+            searchStore.category,
+            searchStore.offset,
+            searchStore.limit
+        ).then((res) => {
+            if (res.code == 1) {
+                console.log(res)
+                searchStore.searchData = res.data
+            } else {
+                toastStore.showToast = true
+                toastStore.message = res.message
+                if (res.code == 0) {
+                    toastStore.type = 'alert'
+                } else {
+                    toastStore.type = 'error'
+                }
+            }
+        })
+    } catch (err) {
+        console.log('Error in Search tab: ' + err.message)
+    }
 }
+
 </script>
 
 <template>
@@ -85,7 +111,7 @@ const handleSearchBtnClick = () => {
                                 type="search"
                                 v-model="searchStore.searchText"
                                 :placeholder="`Search for ${searchStore.category}`"
-                                class="w-full h-12 max-sm:h-11 text-lg max-sm:text-base px-6 pr-14 max-sm:pr-10 py-2 appearance-none bg-transparent outline-none border border-slate-600 dark:border-transparent dark:border-slate-400 focus:border-slate-800 focus:ring-1 focus:ring-slate-500 dark:focus:ring-slate-300 shadow-sm rounded-2xl dark:placeholder:text-gray-500 placeholder:text-gray-700"
+                                class="w-full h-12 max-sm:h-11 text-lg max-sm:text-base px-6 pr-14 max-sm:pr-10 py-2 appearance-none bg-transparent outline-none border border-slate-600 dark:border-transparent dark:border-slate-300 focus:border-slate-800 focus:ring-1 focus:ring-slate-500 dark:focus:ring-slate-300 shadow-sm rounded-2xl dark:placeholder:text-gray-500 placeholder:text-gray-700"
                             />
                         </form>
                     </div>
