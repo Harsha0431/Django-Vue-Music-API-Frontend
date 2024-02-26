@@ -67,13 +67,16 @@ onBeforeMount(() => {
 
 document.body.addEventListener('keydown', async (e) => {
     if (e.key == 'Escape') {
-        if (searchStore.showSearchTab) {
+        if (searchStore.showSearchTab && searchStore.searchResult.length<1) {
             const routePushValidate = await router.push('/')
             if (!routePushValidate) searchStore.showSearchTab = false
             else {
                 router.push('/')
                 searchStore.showSearchTab = false
             }
+        }
+        else if(searchStore.showSearchTab){
+            searchStore.showSearchTab = false
         }
     }
 })
@@ -83,7 +86,6 @@ document.body.addEventListener('keydown', async (e) => {
 {{ themeStoreObj.isDarkTheme && 'bg-[#1a1b1f]' }} for dark theme
 <template>
     <div
-        disabled
         class="body-container"
         id="body-container-listener"
         :class="[
@@ -95,7 +97,7 @@ document.body.addEventListener('keydown', async (e) => {
         <SearchTab />
 
         <div
-            class="loader-box fixed inset-0 bg-gray-800 opacity-50 top-0 z-[100]"
+            class="loader-box fixed inset-0 bg-gray-800 opacity-50 top-0 z-[10000]"
             v-show="loaderStoreObj.showLoader"
         >
             <div

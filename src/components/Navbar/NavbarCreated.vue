@@ -16,21 +16,23 @@ import {
     removeFromLikedListService
 } from '@/service/playlist/addRemoveLikedItem'
 
-import { RouterLink, useRouter } from 'vue-router'
+import { RouterLink, useRouter, useRoute } from 'vue-router'
 import { themeStore } from '@/store/ThemeStore'
 import { useSpotifyStore } from '@/store/SpotifyStore'
 import { ToastStore } from '@/store/ToastStore'
 import VueCookies from 'vue-cookies'
 import { ref, watchEffect } from 'vue'
-
+import { useSearchStore } from '@/store/SearchStore'
 
 const themeStoreObj = themeStore()
 const userStoreObj = userStore()
 const spotifyStore = useSpotifyStore()
 const toastStoreObj = ToastStore()
 const isLikeInProgress = ref(false)
+const searchStore = useSearchStore()
 
 const router = useRouter()
+const route = useRoute()
 
 const toggleTheme = () => {
     themeStoreObj.toggleTheme()
@@ -138,6 +140,13 @@ function handleAddToPlaylistClick() {
     alert('Not yet developed')
 }
 
+const handleSearchClick = () => {
+    if (route.name == 'search') {
+        searchStore.showSearchTab = true
+    }
+    return
+}
+
 watchEffect(() => {
     if (toastStoreObj.showAcknowledgement) {
         setTimeout(() => {
@@ -199,6 +208,7 @@ watchEffect(() => {
                                 >
                             </div>
                             <RouterLink
+                                @click="handleSearchClick()"
                                 to="/search"
                                 class="nav-icon-search stroke-red-500 focus:animate-bounce focus:ring-0 ring-1 ring-inset ring-red-500 focus:ring-red-500 p-1.5 rounded-full flex justify-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
                             >

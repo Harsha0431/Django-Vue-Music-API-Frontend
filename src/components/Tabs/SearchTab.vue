@@ -3,10 +3,12 @@ import { useSearchStore } from '@/store/SearchStore'
 import { useRouter } from 'vue-router'
 import { ToastStore } from '@/store/ToastStore'
 import { getSearchQuery } from '@/service/search/SearchService'
+import { loaderStore } from '@/store/LoaderStore'
 
 const router = useRouter()
 const searchStore = useSearchStore()
 const toastStore = ToastStore()
+const loadingStore = loaderStore()
 
 const handleSearchBtnClick = async () => {
     if (searchStore.searchText.length < 1) {
@@ -26,42 +28,56 @@ const handleSearchBtnClick = async () => {
         }
     })
     try {
-        console.log(`Searching for ${searchStore.searchText} in ${searchStore.category}`)
+        loadingStore.showLoader = true
+        searchStore.offset = 0
+        searchStore.limit = 20
         await getSearchQuery(
             searchStore.searchText,
             searchStore.category,
             searchStore.offset,
             searchStore.limit
-        ).then((res) => {
-            if (res.code == 1) {
-                console.log(res)
-                searchStore.searchData = res.data
-            } else {
-                toastStore.showToast = true
-                toastStore.message = res.message
-                if (res.code == 0) {
-                    toastStore.type = 'alert'
+        )
+            .then((res) => {
+                if (res.code == 1) {
+                    if(res.data.length<1){
+                        toastStore.message = 'No matching data found'
+                        toastStore.type = 'alert'
+                        toastStore.showToast = true
+                        return
+                    }
+                    searchStore.searchResult = res.data
+                    searchStore.activeSearchText = searchStore.searchText
+                    searchStore.noMoreTracks = false
+                    searchStore.showSearchTab = false
+                    searchStore.searchDataFetched = true
                 } else {
-                    toastStore.type = 'error'
+                    toastStore.showToast = true
+                    toastStore.message = res.message
+                    if (res.code == 0) {
+                        toastStore.type = 'alert'
+                    } else {
+                        toastStore.type = 'error'
+                    }
                 }
-            }
-        })
+            })
+            .finally(() => {
+                loadingStore.showLoader = false
+            })
     } catch (err) {
         console.log('Error in Search tab: ' + err.message)
     }
 }
-
 </script>
 
 <template>
     <div
+        class="absolute flex flex-col h-[100vh] w-[100vw] z-[140] backdrop-blur-sm overflow-hidden"
         v-show="searchStore.showSearchTab"
-        class="absolute min-h-[100vh] w-[100vw] z-[140] backdrop-blur overflow-hidden"
     >
         <Transition name="scale">
             <div
                 v-show="searchStore.showSearchTab"
-                class="flex justify-center place-items-center dark:text-white text-black w-full h-full relative top-[10vh]"
+                class="flex justify-center place-items-center dark:text-white text-black w-full top-[10vh] relative"
             >
                 <div class="bg-transparent p-4 rounded-lg max-w-[700px] w-full">
                     <div class="relative mt-2 dark:text-gray-300 flex flex-col gap-y-2">
@@ -106,12 +122,12 @@ const handleSearchBtnClick = async () => {
                                     />
                                 </svg>
                             </button>
-
                             <input
+                                autofocus
                                 type="search"
                                 v-model="searchStore.searchText"
                                 :placeholder="`Search for ${searchStore.category}`"
-                                class="w-full h-12 max-sm:h-11 text-lg max-sm:text-base px-6 pr-14 max-sm:pr-10 py-2 appearance-none bg-transparent outline-none border border-slate-600 dark:border-transparent dark:border-slate-300 focus:border-slate-800 focus:ring-1 focus:ring-slate-500 dark:focus:ring-slate-300 shadow-sm rounded-2xl dark:placeholder:text-gray-500 placeholder:text-gray-700"
+                                class="w-full h-12 max-sm:h-11 text-lg max-sm:text-base px-6 pr-14 max-sm:pr-10 py-2 appearance-none bg-transparent outline-none border placeholder:opacity-75 border-slate-600 dark:border-transparent dark:border-gray-300 focus:border-slate-800 focus:ring-1 focus:ring-slate-500 dark:focus:ring-slate-300 shadow-sm rounded-2xl dark:placeholder:text-slate-300 placeholder:text-gray-700"
                             />
                         </form>
                     </div>

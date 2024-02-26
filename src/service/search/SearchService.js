@@ -18,6 +18,7 @@ export async function getSearchQuery(text, type = 'track', offset = 0, limit = 2
                 }
             })
             .then((response) => {
+                console.log(response.data)
                 return response.data
             })
             .catch((err) => {

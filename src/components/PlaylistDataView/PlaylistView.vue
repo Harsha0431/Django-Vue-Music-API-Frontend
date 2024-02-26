@@ -38,12 +38,13 @@ const playSelectedTrack = (id) => {
                     </div>
                     <div class="flex justify-between place-items-center w-full gap-x-2">
                         <div class="flex flex-col w-full">
-                            <span class="font-semibold tracking-wide w-fit text-[14px]">{{
-                                track.track_name
-                            }}</span>
+                            <span
+                                class="font-semibold tracking-wide w-fit text-[14px] dark:text-gray-200 line-clamp-1 hover:line-clamp-none transition-all"
+                                >{{ track.track_name }}</span
+                            >
                             <!-- TODO:When click on artist name , redirect to artist profile page -->
                             <span
-                                class="tracing-wide font-semibold transition-all text-[13px] dark:text-gray-400 dark:hover:text-gray-300 text-gray-600 hover:text-gray-800 hover:underline cursor-pointer w-fit z-10"
+                                class="tracing-wide font-semibold text-[13px] dark:text-gray-400 dark:hover:text-gray-300 text-gray-600 hover:text-gray-800 hover:underline cursor-pointer w-fit z-10 hover:line-clamp-none transition-all"
                             >
                                 {{ track.artist_name }}
                             </span>
@@ -65,7 +66,7 @@ const playSelectedTrack = (id) => {
                                         viewBox="0 0 24 24"
                                         stroke-width="2"
                                         stroke="currentColor"
-                                        class="pause w-6 h-6 stroke-gray-200"
+                                        class="pause w-6 h-6 stroke-gray-100"
                                     >
                                         <path
                                             stroke-linecap="round"
@@ -84,7 +85,7 @@ const playSelectedTrack = (id) => {
                                         fill="none"
                                         viewBox="0 0 24 24"
                                         stroke-width="2"
-                                        class="stroke-gray-200 play w-6 h-6"
+                                        class="stroke-gray-100 play w-6 h-6"
                                     >
                                         <path
                                             stroke-linecap="round"

@@ -65,7 +65,10 @@ onBeforeMount(async () => {
         <span v-else-if="dataFetched == -1" class="text-gray-900 dark:text-gray-200">
             Failed to load data. Refresh this page or view other library
         </span>
-        <span v-else-if="playlistStore.recommendedList.data.length<1" class="text-gray-900 dark:text-gray-200">
+        <span
+            v-else-if="playlistStore.recommendedList.data.length < 1"
+            class="text-gray-900 dark:text-gray-200"
+        >
             Failed to load data. Refresh this page or view other library
         </span>
         <div v-else class="flex flex-col gap-y-4 h-full w-full">
@@ -86,3 +89,25 @@ onBeforeMount(async () => {
         </div>
     </div>
 </template>
+
+<style>
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #44414a;
+    border-radius: 25rem;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #504d57;
+}
+</style>
