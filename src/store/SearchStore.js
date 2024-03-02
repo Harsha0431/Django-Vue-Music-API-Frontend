@@ -6,6 +6,7 @@ export const useSearchStore = defineStore('search_store', () => {
     const searchText = ref('')
     const activeSearchText = ref('')
     const category = ref('track')
+    const activeCategory = ref('track')
     const category_list = [
         {
             name: 'Music Track',
@@ -30,6 +31,7 @@ export const useSearchStore = defineStore('search_store', () => {
         activeSearchText,
         searchText,
         category,
+        activeCategory,
         category_list,
         offset,
         limit,

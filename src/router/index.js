@@ -40,7 +40,7 @@ const router = createRouter({
             ]
         },
         {
-            path: '/artist/:name?',
+            path: '/artist/:name?/:id?',
             name: 'artist',
             component: () => import('../views/ArtistView.vue')
         },

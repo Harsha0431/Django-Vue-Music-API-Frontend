@@ -39,7 +39,7 @@ const handleSearchBtnClick = async () => {
         )
             .then((res) => {
                 if (res.code == 1) {
-                    if(res.data.length<1){
+                    if (res.data.length < 1) {
                         toastStore.message = 'No matching data found'
                         toastStore.type = 'alert'
                         toastStore.showToast = true
@@ -47,6 +47,7 @@ const handleSearchBtnClick = async () => {
                     }
                     searchStore.searchResult = res.data
                     searchStore.activeSearchText = searchStore.searchText
+                    searchStore.activeCategory = searchStore.category
                     searchStore.noMoreTracks = false
                     searchStore.showSearchTab = false
                     searchStore.searchDataFetched = true
@@ -127,7 +128,7 @@ const handleSearchBtnClick = async () => {
                                 type="search"
                                 v-model="searchStore.searchText"
                                 :placeholder="`Search for ${searchStore.category}`"
-                                class="w-full h-12 max-sm:h-11 text-lg max-sm:text-base px-6 pr-14 max-sm:pr-10 py-2 appearance-none bg-transparent outline-none border placeholder:opacity-75 border-slate-600 dark:border-transparent dark:border-gray-300 focus:border-slate-800 focus:ring-1 focus:ring-slate-500 dark:focus:ring-slate-300 shadow-sm rounded-2xl dark:placeholder:text-slate-300 placeholder:text-gray-700"
+                                class="w-full h-12 max-sm:h-11 text-lg max-sm:text-base px-6 pr-14 max-sm:pr-10 py-2 appearance-none bg-transparent outline-none border placeholder:opacity-75 border-slate-600 dark:border-gray-300 focus:border-slate-800 focus:ring-1 focus:ring-slate-500 dark:focus:ring-slate-300 shadow-sm rounded-2xl dark:placeholder:text-slate-300 placeholder:text-gray-700"
                             />
                         </form>
                     </div>

@@ -5,6 +5,7 @@ import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getSearchQuery } from '@/service/search/SearchService'
 import { ToastStore } from '@/store/ToastStore'
+import ArtistListView from '@/components/PlaylistDataView/ArtistListView.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -36,8 +37,8 @@ const handleLoadMoreClick = async () => {
                 router.replace({
                     name: 'search',
                     query: {
-                        q: searchStore.searchText,
-                        type: searchStore.category,
+                        q: searchStore.activeSearchText,
+                        type: searchStore.activeCategory,
                         offset: searchStore.offset,
                         limit: searchStore.limit
                     }
@@ -73,7 +74,8 @@ onMounted(() => {
             class="h-full w-full overflow-hidden flex flex-col place-items-center justify-center py-4"
         >
             <div class="w-full sm:max-w-[600px] justify-center h-full">
-                <PlaylistView :list="searchStore.searchResult" />
+                <PlaylistView :list="searchStore.searchResult" v-if="searchStore.activeCategory=='track'"/>
+                <ArtistListView :list="searchStore.searchResult" v-else-if="searchStore.activeCategory=='artist'" />
             </div>
             <div class="flex w-full justify-center pt-1">
                 <button
