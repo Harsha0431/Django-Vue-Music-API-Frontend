@@ -32,7 +32,6 @@ const handleCreatePlaylist = async () => {
 }
 
 watchEffect(() => {
-    console.log(childRouteName.value)
     if (childRouteName.value == 'liked-list') {
         childComponent.value = LikedListView
         spotifyStore.current_playing = 'liked'

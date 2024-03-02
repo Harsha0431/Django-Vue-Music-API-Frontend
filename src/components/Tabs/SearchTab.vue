@@ -4,11 +4,15 @@ import { useRouter } from 'vue-router'
 import { ToastStore } from '@/store/ToastStore'
 import { getSearchQuery } from '@/service/search/SearchService'
 import { loaderStore } from '@/store/LoaderStore'
+import { onClickOutside } from '@vueuse/core'
+import { ref } from 'vue'
 
 const router = useRouter()
 const searchStore = useSearchStore()
 const toastStore = ToastStore()
 const loadingStore = loaderStore()
+
+const outClickRef = ref(null)
 
 const handleSearchBtnClick = async () => {
     if (searchStore.searchText.length < 1) {
@@ -68,6 +72,8 @@ const handleSearchBtnClick = async () => {
         console.log('Error in Search tab: ' + err.message)
     }
 }
+
+onClickOutside(outClickRef, () => (searchStore.showSearchTab = false))
 </script>
 
 <template>
@@ -77,6 +83,7 @@ const handleSearchBtnClick = async () => {
     >
         <Transition name="scale">
             <div
+                ref="outClickRef"
                 v-show="searchStore.showSearchTab"
                 class="flex justify-center place-items-center dark:text-white text-black w-full top-[10vh] relative"
             >

@@ -4,14 +4,17 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const props = defineProps(['list'])
 
-const handleViewArtistClick = (id, name) => {
+const handleViewArtistClick = (id, name, image) => {
     router.push({
-        name: 'artist',
+        name: 'artist-profile',
         params: {
             name: name
         },
         query: {
             id: id
+        },
+        props:{
+            image: image
         }
     })
 }
@@ -54,7 +57,7 @@ const handleViewArtistClick = (id, name) => {
                         >
                             <div class="">
                                 <button
-                                    @click="() => handleViewArtistClick(item.id, item.name)"
+                                    @click="() => handleViewArtistClick(item.id, item.name, item.image)"
                                     class="rounded-full z-[100] h-fit relative bg-[#ff3957e2] transition-all p-2 hover:bg-[#ff3957]"
                                 >
                                     <svg

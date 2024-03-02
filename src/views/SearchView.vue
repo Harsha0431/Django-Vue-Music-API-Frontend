@@ -43,8 +43,7 @@ const handleLoadMoreClick = async () => {
                         limit: searchStore.limit
                     }
                 })
-            }
-            else{
+            } else {
                 toastStore.message = 'No matching data found'
                 toastStore.type = 'alert'
                 toastStore.showToast = true
@@ -73,9 +72,15 @@ onMounted(() => {
             v-if="searchStore.searchDataFetched && searchStore.searchResult.length > 0"
             class="h-full w-full overflow-hidden flex flex-col place-items-center justify-center py-4"
         >
-            <div class="w-full sm:max-w-[600px] justify-center h-full">
-                <PlaylistView :list="searchStore.searchResult" v-if="searchStore.activeCategory=='track'"/>
-                <ArtistListView :list="searchStore.searchResult" v-else-if="searchStore.activeCategory=='artist'" />
+            <div class="w-[95%] sm:max-w-[600px] justify-center h-full">
+                <PlaylistView
+                    :list="searchStore.searchResult"
+                    v-if="searchStore.activeCategory == 'track'"
+                />
+                <ArtistListView
+                    :list="searchStore.searchResult"
+                    v-else-if="searchStore.activeCategory == 'artist'"
+                />
             </div>
             <div class="flex w-full justify-center pt-1">
                 <button

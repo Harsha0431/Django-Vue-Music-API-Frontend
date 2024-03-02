@@ -40,12 +40,12 @@ const router = createRouter({
             ]
         },
         {
-            path: '/artist/:name?/:id?',
+            path: '/artist',
             name: 'artist',
             component: () => import('../views/ArtistView.vue')
         },
         {
-            path: '/artist/:name/profile',
+            path: '/artist/:name/:id?',
             name: 'artist-profile',
             component: () => import('../views/SingleArtistView.vue')
         },

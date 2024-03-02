@@ -1,11 +1,8 @@
 <script setup>
 import { useSpotifyStore } from '@/store/SpotifyStore'
 import { ToastStore } from '@/store/ToastStore'
-import { useRouter } from 'vue-router'
 
-const router = useRouter()
-
-const props = defineProps(['list'])
+const props = defineProps(['list', 'artistName'])
 const spotifyStore = useSpotifyStore()
 const toastStore = ToastStore()
 
@@ -17,18 +14,6 @@ const playSelectedTrack = (id) => {
         toastStore.showToast = true
     }
 }
-
-const handleClickArtist = (name, id) => {
-    router.push({
-        name: 'artist-profile',
-        params: {
-            name: name
-        },
-        query: {
-            id: id
-        }
-    })
-}
 </script>
 
 <template>
@@ -37,6 +22,12 @@ const handleClickArtist = (name, id) => {
             <div
                 class="flex flex-col w-full h-fit gap-x-4 flex-wrap gap-y-3 justify-start relative"
             >
+                <span
+                    class="text-gray-900 dark:text-gray-200 tracking-wide text-base max-sm:text-sm pl-4"
+                >
+                    <span class="font-bold">{{ props.artistName }}'s </span> Top 10 Tracks and
+                    Albums
+                </span>
                 <div
                     v-for="(track, index) in props.list"
                     :key="index"
@@ -47,22 +38,28 @@ const handleClickArtist = (name, id) => {
                     >
                         <img
                             class="rounded-md w-full h-full hover:scale-105 transition-all"
-                            :src="track.track_image"
-                            :alt="track.track_name"
+                            :src="track.image"
+                            :alt="track.name"
                         />
                     </div>
                     <div class="flex justify-between place-items-center w-full gap-x-2">
                         <div class="flex flex-col w-full">
                             <span
                                 class="font-semibold tracking-wide w-fit text-[14px] dark:text-gray-200 line-clamp-1 hover:line-clamp-none transition-all"
-                                >{{ track.track_name }}</span
                             >
-                            <button
-                                @click="handleClickArtist(track.artist_name, track.artist_id)"
-                                class="tracing-wide font-semibold text-[13px] dark:text-gray-400 dark:hover:text-gray-300 text-gray-600 hover:text-gray-800 hover:underline cursor-pointer w-fit z-10 hover:line-clamp-none transition-all"
+                                {{ track.name }}
+                            </span>
+                            <span
+                                class="tracing-wide font-semibold text-[13px] dark:text-gray-400 dark:hover:text-gray-300 text-gray-600 hover:text-gray-800 cursor-pointer line-clamp-1 w-fit z-10 hover:line-clamp-none transition-all"
                             >
-                                {{ track.artist_name }}
-                            </button>
+                                {{
+                                    track.type == 'track'
+                                        ? 'Single Track'
+                                        : `Album - ${track.total_tracks} ${
+                                              track.total_tracks == 1 ? 'track' : 'tracks'
+                                          }`
+                                }}
+                            </span>
                         </div>
                         <div
                             class="md:opacity-0 flex transition-all justify-center place-items-center group-hover:opacity-100"
@@ -71,7 +68,7 @@ const handleClickArtist = (name, id) => {
                                 <button
                                     v-if="
                                         spotifyStore.track_list[spotifyStore.current_track] ==
-                                        track.track_id
+                                        track.uri
                                     "
                                     class="rounded-full z-[100] h-fit relative bg-[#ff3957e2] transition-all p-2 hover:bg-[#ff3957]"
                                 >
@@ -91,7 +88,7 @@ const handleClickArtist = (name, id) => {
                                     </svg>
                                 </button>
                                 <button
-                                    @click="() => playSelectedTrack(track.track_id)"
+                                    @click="() => playSelectedTrack(track.uri)"
                                     v-else
                                     class="rounded-full z-[100] h-fit relative bg-[#ff3957e2] transition-all p-2 hover:bg-[#ff3957]"
                                 >

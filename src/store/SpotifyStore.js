@@ -11,6 +11,7 @@ export const useSpotifyStore = defineStore('Spotify Store', () => {
     const isPlaying = ref(false)
     const isInterrupted = ref(false)
     const track_list = ref([
+        'spotify:album:4gCNyS7pidfK3rKWhB3JOY',
         'spotify:track:7JJmb5XwzOO8jgpou264Ml',
         'spotify:track:7F1CiKqrY44kh5cDqwHOnx',
         'spotify:track:3oL3XRtkP1WVbMxf7dtTdu',
