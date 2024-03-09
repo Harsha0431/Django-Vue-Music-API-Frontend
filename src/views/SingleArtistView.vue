@@ -65,9 +65,13 @@ onBeforeMount(async () => {
 
 <template>
     <div class="w-full h-full">
-        <div class="w-full flex justify-center h-full" v-if="dataFetched && artistList.length > 0">
+        <div
+            class="w-full flex flex-col gap-y-4 items-center justify-center h-full"
+            v-if="dataFetched && artistList.length > 0"
+        >
             <div class="w-[95%] sm:max-w-[600px] h-full min-h-[1px]">
-                <ArtistRelatedTracksView :list="artistList" :artistName="route.params.name" />
+                <ArtistRelatedTracksView :list="artistList" :artistName="route.params.name">
+                </ArtistRelatedTracksView>
             </div>
         </div>
         <span
