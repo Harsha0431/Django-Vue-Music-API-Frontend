@@ -7,10 +7,13 @@ import { userStore } from '@/store/User'
 import { onBeforeMount, onMounted, ref, watchEffect } from 'vue'
 import VueCookies from 'vue-cookies'
 import { SignupService } from '../service/login/loginService'
+import { getHomeArtists } from '@/helpers/getHomeArtists'
+import { useHomeArtistStore } from '@/store/HomeArtistStore';
 
 const loadStoreObj = loaderStore()
 const userStoreObj = userStore()
 const toastStore = ToastStore()
+const homeArtistStore = useHomeArtistStore()
 
 const loginWithUsername = ref(false)
 const signUpClicked = ref(false)
@@ -31,7 +34,7 @@ const handleLoginSubmit = async () => {
         ? { username: username.value, password: password.value }
         : { email: email.value, password: password.value }
     await LoginService(login_data)
-        .then((res) => {
+        .then(async(res) => {
             if (res.code == 1) {
                 VueCookies.set('user-token', res.token, '7d')
                 userStoreObj.setUser({
@@ -44,6 +47,17 @@ const handleLoginSubmit = async () => {
                 toastStore.message = 'Logged in successfully'
                 toastStore.type = 'success'
                 toastStore.showToast = true
+                await getHomeArtists(res.token)
+                    .then((result)=>{
+                        if(res.code == 1){
+                            homeArtistStore.userArtists = result.data.artists_list
+                            homeArtistStore.suggestedArtists = result.data.suggested_list
+                        }
+                        else{
+                            homeArtistStore.userArtists = []
+                            homeArtistStore.suggestedArtists = []
+                        }
+                    })
                 router.push('/')
             } else {
                 toastStore.message = res.message

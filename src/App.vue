@@ -16,9 +16,11 @@ import { userStore } from './store/User'
 import { useSpotifyStore } from '@/store/SpotifyStore'
 import WebPlayback from './components/MusicPlayer/WebPlayback.vue'
 import { useSearchStore } from '@/store/SearchStore'
+import { getHomeArtists } from './helpers/getHomeArtists'
+import { useHomeArtistStore } from './store/HomeArtistStore'
 
 const searchStore = useSearchStore()
-
+const homeArtistStore = useHomeArtistStore()
 const spotifyStore = useSpotifyStore()
 const themeStoreObj = themeStore()
 const loaderStoreObj = loaderStore()
@@ -29,7 +31,7 @@ const default_token_login = ref(true)
 const verify_user_token = async () => {
     loaderStoreObj.toggleLoader()
     await VerifyToken(VueCookies.get('user-token'))
-        .then((res) => {
+        .then(async(res) => {
             if (res.code == 1) {
                 spotifyStore.is_active = true
                 userStoreObj.setUser({
@@ -39,6 +41,17 @@ const verify_user_token = async () => {
                     isLoggedIn: true,
                     userRole: res.user.role
                 })
+                await getHomeArtists(VueCookies.get('user-token'))
+                    .then((result)=>{
+                        if(res.code == 1){
+                            homeArtistStore.userArtists = result.data.artists_list
+                            homeArtistStore.suggestedArtists = result.data.suggested_list
+                        }
+                        else{
+                            homeArtistStore.userArtists = []
+                            homeArtistStore.suggestedArtists = []
+                        }
+                    })
             } else {
                 router.push('/login')
             }

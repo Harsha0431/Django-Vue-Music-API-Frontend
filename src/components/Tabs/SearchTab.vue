@@ -73,7 +73,12 @@ const handleSearchBtnClick = async () => {
     }
 }
 
-onClickOutside(outClickRef, () => (searchStore.showSearchTab = false))
+onClickOutside(outClickRef, () => {
+    if (searchStore.showSearchTab) {
+        searchStore.showSearchTab = false
+        if (searchStore.searchResult.length == 0) router.push('/')
+    }
+})
 </script>
 
 <template>

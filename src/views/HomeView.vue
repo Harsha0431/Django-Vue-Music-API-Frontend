@@ -4,9 +4,12 @@ import { useSpotifyStore } from '@/store/SpotifyStore'
 import { ToastStore } from '@/store/ToastStore'
 import MusicBarAnimated from '@/components/loaders/MusicBarAnimated.vue'
 import { useRouter } from 'vue-router'
+import { useHomeArtistStore } from '@/store/HomeArtistStore'
+import HomeArtistsView from '@/components/PlaylistDataView/HomeArtistsView.vue'
 
 const spotifyStore = useSpotifyStore()
 const toastStore = ToastStore()
+const homeArtistStore = useHomeArtistStore()
 
 const router = useRouter()
 
@@ -36,7 +39,9 @@ const handleOpenListClick = (type) => {
 </script>
 
 <template>
-    <div class="px-4 relative mt-2">
+    <div
+        class="px-4 relative mt-2 flex flex-col ssm:gap-y-8 gap-y-6 overflow-x-hidden h-full overflow-y-auto pb-4"
+    >
         <div class="mt-4 flex justify-center">
             <div
                 class="flex justify-around max-ssm:min-w-max max-ssm:justify-center max-ssm:align-middle max-ssm:flex-col flex-wrap ssm:w-full gap-4"
@@ -270,5 +275,48 @@ const handleOpenListClick = (type) => {
                 </div>
             </div>
         </div>
+        <div
+            class="flex justify-center relative mt-3 max-sm:mt-2 w-full flex-col gap-y-8 lg:text-base text-sm tracking-wide dark:text-gray-300 text-gray-700"
+        >
+            <div v-show="homeArtistStore.userArtists.length > 0" class="flex flex-col gap-y-3">
+                <span class="font-semibold"> Artists You've Discovered </span>
+                <div>
+                    <home-artists-view :list="homeArtistStore.userArtists" />
+                </div>
+            </div>
+            <div v-show="homeArtistStore.suggestedArtists.length > 0" class="flex flex-col gap-y-4">
+                <span class="font-semibold">Suggested Artists for You</span>
+                <div>
+                    <home-artists-view :list="homeArtistStore.suggestedArtists" />
+                </div>
+            </div>
+        </div>
     </div>
 </template>
+
+<style scoped>
+.home-explore-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #44414a;
+    border-radius: 25rem;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #504d57;
+}
+</style>
